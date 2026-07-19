@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="DPRO化粧品店 オーナー・スタッフ用iPad接客画面">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜iPad接客</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="owner-ipad.js"></script>
+</head>
+<body class="ipad-body">
+  <a class="skip-link" href="#ipadMain">本文へ移動</a>
+
+  <section id="ipadLoginView" class="ipad-login-shell">
+    <div class="ipad-login-card">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-copy">
+          <span class="brand-title">DPROコスメティックサロン</span>
+          <span class="brand-subtitle">オーナー・スタッフ用iPad接客画面</span>
+        </div>
+      </div>
+      <p class="eyebrow">SERVICE DEVICE SIGN IN</p>
+      <h1>接客に必要な情報だけを、すぐ手元に。</h1>
+      <p class="lead">管理コードで端末を開き、担当スタッフを選択してください。</p>
+      <form id="ipadLoginForm" class="ipad-login-form" novalidate>
+        <label for="ipadManagementCode">管理コード</label>
+        <div class="management-code-control">
+          <input id="ipadManagementCode" type="password" inputmode="numeric" autocomplete="current-password" maxlength="128" placeholder="管理コードを入力">
+          <button id="ipadToggleCode" class="code-action-button" type="button" aria-label="管理コードを表示">表示</button>
+          <button id="ipadClearCode" class="code-action-button danger-text" type="button">削除</button>
+        </div>
+        <p class="hint">デモ管理コードは1234です。管理コード自体は端末へ保存しません。</p>
+        <div id="ipadLoginError" class="alert danger" role="alert" hidden></div>
+        <button id="ipadLoginButton" class="btn primary full-width" type="submit">iPad画面を開く</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="ipadAppView" class="ipad-app" hidden>
+    <header class="ipad-topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-copy">
+          <span id="ipadStoreName" class="brand-title">DPROコスメティックサロン</span>
+          <span class="brand-subtitle">接客・購入・サンプル・フォロー</span>
+        </div>
+      </div>
+      <div class="ipad-topbar-controls">
+        <label for="ipadStaffSelect">操作スタッフ</label>
+        <select id="ipadStaffSelect" aria-label="操作するスタッフを選択"></select>
+        <button id="ipadRefreshButton" class="btn ghost compact" type="button">最新情報</button>
+        <a class="btn ghost compact" href="owner.html?demo=1">PC管理</a>
+        <button id="ipadLogoutButton" class="btn ghost compact" type="button">終了</button>
+      </div>
+    </header>
+
+    <nav class="ipad-tabbar" aria-label="iPad業務メニュー">
+      <button class="ipad-tab-button is-active" type="button" data-ipad-view="appointments"><span>🗓️</span>接客一覧</button>
+      <button class="ipad-tab-button" type="button" data-ipad-view="customers"><span>🔎</span>顧客検索</button>
+      <button class="ipad-tab-button" type="button" data-ipad-view="followups"><span>🔔</span>フォロー</button>
+    </nav>
+
+    <main id="ipadMain" class="ipad-main">
+      <div id="ipadGlobalError" class="alert danger" role="alert" hidden></div>
+      <div id="ipadLoading" class="ipad-loading" hidden>
+        <div class="spinner"></div>
+        <p>情報を読み込んでいます</p>
+      </div>
+
+      <section id="ipadViewAppointments" class="ipad-view">
+        <div class="ipad-page-heading">
+          <div>
+            <p class="eyebrow">TODAY & UPCOMING</p>
+            <h1>本日・近日の接客</h1>
+            <p>予約のお客様を選び、接客記録を開始します。</p>
+          </div>
+          <div id="ipadSummaryCards" class="ipad-summary-cards"></div>
+        </div>
+        <div id="ipadAppointmentList" class="ipad-card-grid"></div>
+
+        <section class="card ipad-recent-panel">
+          <div class="ipad-panel-heading">
+            <div><p class="eyebrow">QUICK START</p><h2>最近の顧客から接客開始</h2></div>
+            <button class="btn secondary compact" type="button" data-jump-ipad-view="customers">顧客を検索</button>
+          </div>
+          <div id="ipadRecentCustomers" class="ipad-customer-strip"></div>
+        </section>
+      </section>
+
+      <section id="ipadViewCustomers" class="ipad-view" hidden>
+        <div class="ipad-page-heading">
+          <div><p class="eyebrow">CUSTOMERS</p><h1>顧客を検索</h1><p>氏名・電話番号・顧客番号で検索できます。</p></div>
+        </div>
+        <section class="card ipad-search-panel">
+          <form id="ipadCustomerSearchForm" class="ipad-search-row">
+            <label class="sr-only" for="ipadCustomerSearchInput">顧客検索</label>
+            <input id="ipadCustomerSearchInput" type="search" maxlength="120" placeholder="例：鈴木 花子、090-1111-2222、COS-DEMO-0001">
+            <button class="btn primary" type="submit">検索する</button>
+            <button id="ipadCustomerSearchClear" class="btn secondary" type="button">クリア</button>
+          </form>
+          <p class="hint">電話番号はハイフン・空白・全角・+81形式を同一番号として検索します。</p>
+        </section>
+        <div id="ipadCustomerResults" class="ipad-card-grid"></div>
+      </section>
+
+      <section id="ipadViewFollowups" class="ipad-view" hidden>
+        <div class="ipad-page-heading">
+          <div><p class="eyebrow">FOLLOW UPS</p><h1>フォロー予定</h1><p>サンプル後、再購入時期、相談後の確認を管理します。</p></div>
+        </div>
+        <div id="ipadFollowupList" class="ipad-card-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="ipadSessionDialog" class="ipad-session-dialog">
+    <div class="ipad-session-shell">
+      <header class="ipad-session-header">
+        <div>
+          <p class="eyebrow">SERVICE RECORD</p>
+          <h2 id="ipadSessionCustomerName">接客記録</h2>
+          <p id="ipadSessionCustomerMeta"></p>
+        </div>
+        <button id="ipadSessionClose" class="icon-button" type="button" aria-label="接客画面を閉じる">×</button>
+      </header>
+
+      <div class="ipad-session-layout">
+        <aside class="ipad-customer-history">
+          <section>
+            <h3>会員情報</h3>
+            <dl id="ipadCustomerDefinition" class="ipad-definition-list"></dl>
+          </section>
+          <section>
+            <h3>お好み・注意事項</h3>
+            <div id="ipadPreferenceSummary"></div>
+          </section>
+          <section>
+            <h3>内部メモ</h3>
+            <div id="ipadInternalNotes"></div>
+          </section>
+          <section>
+            <h3>最近の購入</h3>
+            <div id="ipadPurchaseHistory"></div>
+          </section>
+          <section>
+            <h3>最近の相談・サンプル</h3>
+            <div id="ipadServiceHistory"></div>
+          </section>
+        </aside>
+
+        <form id="ipadSessionForm" class="ipad-session-form" novalidate>
+          <input id="ipadSessionCustomerId" type="hidden">
+          <input id="ipadSessionReservationId" type="hidden">
+
+          <section class="card ipad-form-section">
+            <div class="ipad-section-number">1</div>
+            <div>
+              <h3>今回の美容相談</h3>
+              <p>お客様の言葉を中心に記録し、医療的な診断表現は使用しません。</p>
+            </div>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="ipadCustomerRequest">相談したいこと</label>
+                <textarea id="ipadCustomerRequest" maxlength="1000" placeholder="例：乾燥しにくいファンデーションを探しています。"></textarea>
+              </div>
+              <div class="field full">
+                <label for="ipadSkinCondition">現在の状態・本人申告</label>
+                <textarea id="ipadSkinCondition" maxlength="1000" placeholder="例：頬の乾燥が気になる。刺激に弱いことがある。"></textarea>
+              </div>
+              <div class="field">
+                <label for="ipadCurrentProducts">現在使用中の商品</label>
+                <input id="ipadCurrentProducts" type="text" maxlength="1000">
+              </div>
+              <div class="field">
+                <label for="ipadPreferredTexture">好みの使用感</label>
+                <input id="ipadPreferredTexture" type="text" maxlength="300" placeholder="しっとり、軽い使用感など">
+              </div>
+              <div class="field">
+                <label for="ipadPreferredFragrance">香りの好み</label>
+                <input id="ipadPreferredFragrance" type="text" maxlength="300">
+              </div>
+              <div class="field">
+                <label for="ipadPreferredPrice">希望価格帯</label>
+                <input id="ipadPreferredPrice" type="text" maxlength="100" placeholder="例：3,000〜7,000円">
+              </div>
+              <div class="field">
+                <label for="ipadColorPreference">色味・カラーの好み</label>
+                <input id="ipadColorPreference" type="text" maxlength="500">
+              </div>
+              <div class="field">
+                <label for="ipadUnsuitableProducts">以前合わなかった商品</label>
+                <input id="ipadUnsuitableProducts" type="text" maxlength="1000">
+              </div>
+              <div class="field full">
+                <label for="ipadPublicSummary">お客様にも共有できる接客要約</label>
+                <textarea id="ipadPublicSummary" maxlength="1500" placeholder="例：保湿を重視し、化粧水と美容液を提案しました。"></textarea>
+              </div>
+              <div class="field full">
+                <label for="ipadInternalNote">スタッフ専用メモ</label>
+                <textarea id="ipadInternalNote" maxlength="2000" placeholder="LINE会員画面には表示されません。"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="card ipad-form-section">
+            <div class="ipad-section-number">2</div>
+            <div><h3>提案商品</h3><p>提案結果を「提案・購入・サンプル・見送り」で記録します。</p></div>
+            <div class="ipad-inline-builder">
+              <div class="field">
+                <label for="ipadRecommendationProduct">商品</label>
+                <select id="ipadRecommendationProduct"></select>
+              </div>
+              <div class="field">
+                <label for="ipadRecommendationType">結果</label>
+                <select id="ipadRecommendationType">
+                  <option value="suggested">提案</option>
+                  <option value="purchased">購入</option>
+                  <option value="sampled">サンプル</option>
+                  <option value="declined">今回は見送り</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="ipadRecommendationReason">理由・ポイント</label>
+                <input id="ipadRecommendationReason" type="text" maxlength="500">
+              </div>
+              <button id="ipadAddRecommendation" class="btn secondary" type="button">提案へ追加</button>
+            </div>
+            <div id="ipadRecommendationList" class="ipad-selected-list"></div>
+          </section>
+
+          <section class="card ipad-form-section">
+            <div class="ipad-section-number">3</div>
+            <div><h3>購入登録</h3><p>店頭で購入した商品だけを追加します。購入がない場合は空のままで構いません。</p></div>
+            <div class="ipad-inline-builder purchase-builder">
+              <div class="field">
+                <label for="ipadPurchaseProduct">商品</label>
+                <select id="ipadPurchaseProduct"></select>
+              </div>
+              <div class="field small-field">
+                <label for="ipadPurchaseQuantity">数量</label>
+                <input id="ipadPurchaseQuantity" type="number" min="1" max="99" value="1">
+              </div>
+              <div class="field small-field">
+                <label for="ipadPurchaseDiscount">値引額</label>
+                <input id="ipadPurchaseDiscount" type="number" min="0" max="100000000" value="0">
+              </div>
+              <button id="ipadAddPurchase" class="btn secondary" type="button">購入へ追加</button>
+            </div>
+            <div id="ipadPurchaseList" class="ipad-selected-list"></div>
+            <div class="ipad-total-row"><span>購入合計</span><strong id="ipadPurchaseTotal">0円</strong></div>
+          </section>
+
+          <section class="card ipad-form-section">
+            <div class="ipad-section-number">4</div>
+            <div><h3>サンプル提供</h3><p>同じサンプルを30日以内に再提供する場合は、理由の記録が必要です。</p></div>
+            <div class="ipad-inline-builder sample-builder">
+              <div class="field">
+                <label for="ipadSampleSelect">サンプル</label>
+                <select id="ipadSampleSelect"></select>
+              </div>
+              <div class="field small-field">
+                <label for="ipadSampleQuantity">数量</label>
+                <input id="ipadSampleQuantity" type="number" min="1" max="20" value="1">
+              </div>
+              <div class="field">
+                <label for="ipadSamplePurpose">目的</label>
+                <input id="ipadSamplePurpose" type="text" maxlength="500" placeholder="使用感の確認など">
+              </div>
+              <div class="field">
+                <label for="ipadSampleFollowup">確認日時</label>
+                <input id="ipadSampleFollowup" type="datetime-local">
+              </div>
+              <button id="ipadAddSample" class="btn secondary" type="button">サンプルへ追加</button>
+            </div>
+            <div id="ipadSampleList" class="ipad-selected-list"></div>
+          </section>
+
+          <section class="card ipad-form-section">
+            <div class="ipad-section-number">5</div>
+            <div><h3>次回フォロー</h3><p>必要な場合だけ登録します。</p></div>
+            <label class="ipad-toggle-row">
+              <input id="ipadFollowupEnabled" type="checkbox">
+              <span>この接客のフォロー予定を登録する</span>
+            </label>
+            <div id="ipadFollowupFields" class="form-grid" hidden>
+              <div class="field">
+                <label for="ipadFollowupDue">フォロー日時</label>
+                <input id="ipadFollowupDue" type="datetime-local">
+              </div>
+              <div class="field">
+                <label for="ipadFollowupPriority">優先度</label>
+                <select id="ipadFollowupPriority">
+                  <option value="low">低</option>
+                  <option value="normal" selected>通常</option>
+                  <option value="high">高</option>
+                  <option value="urgent">至急</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="ipadFollowupSubject">件名</label>
+                <input id="ipadFollowupSubject" type="text" maxlength="200" value="美容相談後フォロー">
+              </div>
+              <div class="field full">
+                <label for="ipadFollowupNote">確認内容</label>
+                <textarea id="ipadFollowupNote" maxlength="1000"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <section class="card ipad-save-section">
+            <label class="ipad-toggle-row">
+              <input id="ipadCompleteReservation" type="checkbox" checked>
+              <span>予約を「対応完了」にする</span>
+            </label>
+            <div id="ipadSessionError" class="alert danger" role="alert" hidden></div>
+            <button id="ipadSaveSession" class="btn primary ipad-save-button" type="submit">接客内容を保存する</button>
+            <p class="hint">カウンセリング・購入・サンプル・フォローは一度の保存でまとめて登録されます。</p>
+          </section>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="ipadRepeatSampleDialog" class="modal-dialog">
+    <div class="modal-card">
+      <p class="eyebrow">SAMPLE CONFIRMATION</p>
+      <h2>同じサンプルを再提供しますか？</h2>
+      <p>30日以内に提供済みの場合に備え、再提供理由を記録できます。</p>
+      <div class="field">
+        <label for="ipadRepeatSampleReason">再提供理由</label>
+        <textarea id="ipadRepeatSampleReason" maxlength="500" placeholder="例：使用方法を変えてもう一度確認するため"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button id="ipadRepeatSampleCancel" class="btn secondary" type="button">通常追加</button>
+        <button id="ipadRepeatSampleConfirm" class="btn primary" type="button">再提供として追加</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="ipadConfirmDialog" class="modal-dialog">
+    <div class="modal-card">
+      <p class="eyebrow">CONFIRMATION</p>
+      <h2 id="ipadConfirmTitle">状態を変更しますか？</h2>
+      <p id="ipadConfirmMessage"></p>
+      <div class="modal-actions">
+        <button id="ipadConfirmCancel" class="btn secondary" type="button">戻る</button>
+        <button id="ipadConfirmExecute" class="btn primary" type="button">変更する</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
