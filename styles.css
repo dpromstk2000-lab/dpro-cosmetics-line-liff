@@ -905,3 +905,36 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .ipad-selected-item { align-items:flex-start; }
   .ipad-save-section { bottom:-14px; }
 }
+
+
+/* STEP COSMETICS-7-R1：iPad上部操作欄の視認性修正 */
+.ipad-topbar-controls {
+  flex-wrap: nowrap;
+}
+.ipad-topbar-controls label {
+  min-width: 72px;
+  color: #ffffff;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.ipad-topbar-controls .btn {
+  min-width: 76px;
+  padding-inline: 12px;
+  white-space: nowrap;
+}
+.ipad-topbar-controls select {
+  min-width: 310px;
+}
+@media(max-width:1050px) {
+  .ipad-topbar-controls select {
+    min-width: 220px;
+  }
+}
+@media(max-width:850px) {
+  .ipad-topbar-controls label {
+    min-width: 0;
+  }
+  .ipad-topbar-controls select {
+    min-width: 0;
+  }
+}
