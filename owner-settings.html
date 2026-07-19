@@ -182,8 +182,8 @@
       <div class="form-grid">
         <div class="field"><label for="holidayDate">日付</label><input id="holidayDate" type="date" required></div>
         <div class="field"><label class="operations-check"><input id="holidayAllDay" type="checkbox" checked><span>終日休業</span></label></div>
-        <div class="field"><label for="holidayStart">開始時間</label><input id="holidayStart" type="time" step="1800"></div>
-        <div class="field"><label for="holidayEnd">終了時間</label><input id="holidayEnd" type="time" step="1800"></div>
+        <div class="field"><label for="holidayStart">開始時間</label><select id="holidayStart" class="half-hour-select"></select></div>
+        <div class="field"><label for="holidayEnd">終了時間</label><select id="holidayEnd" class="half-hour-select"></select></div>
         <div class="field full"><label for="holidayReason">理由</label><input id="holidayReason" maxlength="240"></div>
       </div>
       <div id="holidayFormError" class="alert danger" hidden></div>

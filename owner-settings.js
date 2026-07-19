@@ -53,6 +53,7 @@
     document.getElementById("holidayAllDay").addEventListener("change", toggleHolidayTimes);
     document.getElementById("operationsConfirmCancel").addEventListener("click", closeConfirm);
     document.getElementById("operationsConfirmExecute").addEventListener("click", executeConfirm);
+    populateHolidayTimeSelects();
   }
 
   async function login(event) {
@@ -130,12 +131,18 @@
     const hours = st.business_hours || {};
     document.getElementById("businessHoursEditor").innerHTML = Object.keys(dayLabels).map(day => {
       const h = hours[day] || {closed:false,open:"10:00",close:"19:00"};
+      const openValue = normalizeHalfHour(h.open, "10:00");
+      const closeValue = normalizeHalfHour(h.close, "19:00");
       return `<div class="business-day-row" data-business-day="${day}">
         <strong>${dayLabels[day]}曜日</strong>
         <label class="operations-check compact-check"><input type="checkbox" data-closed ${h.closed?"checked":""}><span>定休日</span></label>
-        <input type="time" step="1800" data-open value="${h.open||"10:00"}" ${h.closed?"disabled":""}>
+        <select class="half-hour-select" data-open aria-label="${dayLabels[day]}曜日の開店時間" ${h.closed?"disabled":""}>
+          ${halfHourOptions(openValue)}
+        </select>
         <span>〜</span>
-        <input type="time" step="1800" data-close value="${h.close||"19:00"}" ${h.closed?"disabled":""}>
+        <select class="half-hour-select" data-close aria-label="${dayLabels[day]}曜日の閉店時間" ${h.closed?"disabled":""}>
+          ${halfHourOptions(closeValue)}
+        </select>
       </div>`;
     }).join("");
     document.querySelectorAll("[data-business-day] [data-closed]").forEach(c => c.addEventListener("change", () => {
@@ -259,7 +266,7 @@
     document.getElementById("holidayForm").reset();
     setValue("holidayId",h?.id); setValue("holidayDate",h?.holiday_date||new Date().toISOString().slice(0,10));
     document.getElementById("holidayAllDay").checked = h?.all_day ?? true;
-    setValue("holidayStart",h?.start_time?.slice(0,5)||"10:00"); setValue("holidayEnd",h?.end_time?.slice(0,5)||"12:00"); setValue("holidayReason",h?.reason);
+    setValue("holidayStart",normalizeHalfHour(h?.start_time,"10:00")); setValue("holidayEnd",normalizeHalfHour(h?.end_time,"12:00")); setValue("holidayReason",h?.reason);
     document.getElementById("holidayDialogTitle").textContent = h ? "休業日を編集" : "休業日を追加";
     toggleHolidayTimes(); formError("holidayFormError","");
     document.getElementById("holidayDialog").showModal();
@@ -299,6 +306,35 @@
   function openConfirm(title,message,fn){pendingConfirm=fn;document.getElementById("operationsConfirmTitle").textContent=title;document.getElementById("operationsConfirmMessage").textContent=message;document.getElementById("operationsConfirmDialog").showModal();}
   function closeConfirm(){pendingConfirm=null;document.getElementById("operationsConfirmDialog").close();}
   async function executeConfirm(){if(!pendingConfirm)return;const fn=pendingConfirm;try{await fn();closeConfirm();}catch(e){closeConfirm();globalError(withMessage(e));}}
+
+  function halfHourOptions(selectedValue) {
+    const selected = normalizeHalfHour(selectedValue, "10:00");
+    const options = [];
+    for (let hour = 0; hour < 24; hour += 1) {
+      for (const minute of [0, 30]) {
+        const value = `${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")}`;
+        options.push(`<option value="${value}" ${value===selected?"selected":""}>${value}</option>`);
+      }
+    }
+    return options.join("");
+  }
+
+  function normalizeHalfHour(value, fallback) {
+    const text = String(value || "").slice(0,5);
+    if (!/^\d{2}:\d{2}$/.test(text)) return fallback;
+    const [hourText, minuteText] = text.split(":");
+    const hour = Number(hourText);
+    const minute = Number(minuteText);
+    if (hour < 0 || hour > 23) return fallback;
+    const roundedMinute = minute < 15 ? 0 : minute < 45 ? 30 : 0;
+    const roundedHour = minute >= 45 ? (hour + 1) % 24 : hour;
+    return `${String(roundedHour).padStart(2,"0")}:${String(roundedMinute).padStart(2,"0")}`;
+  }
+
+  function populateHolidayTimeSelects() {
+    document.getElementById("holidayStart").innerHTML = halfHourOptions("10:00");
+    document.getElementById("holidayEnd").innerHTML = halfHourOptions("12:00");
+  }
 
   function value(id){return document.getElementById(id).value.trim()||null;}
   function setValue(id,v){document.getElementById(id).value=v??"";}

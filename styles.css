@@ -1002,3 +1002,25 @@ input[aria-invalid="true"] { border-color: var(--danger); }
   .operations-record-actions { width:100%; }
   .operations-record-actions .btn { flex:1; }
 }
+
+
+/* STEP COSMETICS-8-R1：営業時間を30分刻みの選択式へ統一 */
+.business-day-row .half-hour-select,
+.operations-dialog .half-hour-select {
+  width:100%;
+  min-height:48px;
+  padding:10px 38px 10px 13px;
+  border:1.5px solid #cfc5c0;
+  border-radius:12px;
+  color:var(--charcoal);
+  background-color:#fff;
+  font-size:16px;
+  font-weight:850;
+  font-variant-numeric:tabular-nums;
+}
+.business-day-row .half-hour-select:disabled,
+.operations-dialog .half-hour-select:disabled {
+  color:#9a9094;
+  background:#f2eeee;
+  cursor:not-allowed;
+}
