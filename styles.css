@@ -938,3 +938,67 @@ input[aria-invalid="true"] { border-color: var(--danger); }
     min-width: 0;
   }
 }
+
+
+/* STEP COSMETICS-8：店舗運営設定 */
+.operations-body { background:var(--ivory-100); }
+.operations-layout { display:grid; grid-template-columns:250px minmax(0,1fr); min-height:calc(100vh - 70px); }
+.operations-sidebar {
+  position:sticky; top:70px; align-self:start; display:grid; gap:9px;
+  min-height:calc(100vh - 70px); padding:22px 14px; border-right:1px solid var(--line); background:white;
+}
+.operations-nav {
+  display:flex; min-height:58px; padding:13px 15px; align-items:center; gap:10px;
+  border:1px solid transparent; border-radius:14px; color:var(--plum-900);
+  background:transparent; font-weight:900; text-align:left; cursor:pointer;
+}
+.operations-nav.is-active { color:white; background:linear-gradient(145deg,var(--plum-800),var(--plum-950)); box-shadow:0 10px 20px rgba(63,39,52,.18); }
+.operations-main { position:relative; min-width:0; padding:32px clamp(18px,4vw,48px) 70px; }
+.operations-form { margin:0!important; }
+.operations-subheading { margin:30px 0 14px; padding-top:24px; border-top:1px solid var(--line); font-size:27px; }
+.business-hours-editor { display:grid; gap:10px; }
+.business-day-row {
+  display:grid; grid-template-columns:90px 140px 150px 30px 150px; gap:10px;
+  min-height:62px; padding:10px 13px; align-items:center; border:1px solid var(--line); border-radius:14px; background:var(--ivory-100);
+}
+.business-day-row input[type="time"] { min-height:46px; }
+.compact-check { min-height:46px!important; padding:8px!important; }
+.operations-check {
+  display:flex; min-height:54px; padding:12px 14px; align-items:center; gap:11px;
+  border:1px solid var(--line); border-radius:13px; background:var(--ivory-100); cursor:pointer;
+}
+.operations-check input { width:23px; height:23px; accent-color:var(--plum-800); }
+.operations-save { width:100%; min-height:62px; margin-top:24px; font-size:18px; }
+.operations-card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
+.operations-record { margin:0!important; padding:22px; }
+.operations-record-head { display:flex; align-items:flex-start; justify-content:space-between; gap:15px; }
+.operations-record-head h2 { margin:8px 0 3px; font-size:25px; }
+.operations-record-head p { margin:0; color:var(--muted); }
+.operations-record-actions { display:flex; gap:7px; }
+.operations-search { margin:0 0 18px!important; padding:16px; }
+.operations-search input { width:100%; min-height:54px; }
+.operations-dialog { width:min(760px,calc(100% - 24px)); }
+.wide-dialog { width:min(980px,calc(100% - 24px)); }
+.operations-launch-card { display:flex; margin-bottom:18px; align-items:center; justify-content:space-between; gap:20px; }
+.status-in_stock { color:var(--success); background:var(--success-soft); }
+.status-low_stock,.status-backorder { color:var(--warning); background:var(--warning-soft); }
+.status-check_required { color:var(--info); background:var(--info-soft); }
+.status-discontinued { color:var(--muted); background:#ece8e8; }
+@media(max-width:1000px) {
+  .operations-layout { grid-template-columns:1fr; }
+  .operations-sidebar {
+    position:sticky; top:70px; z-index:20; display:flex; min-height:0; padding:10px;
+    overflow-x:auto; border-right:0; border-bottom:1px solid var(--line);
+  }
+  .operations-nav { flex:0 0 auto; min-width:190px; }
+  .operations-card-grid { grid-template-columns:1fr; }
+}
+@media(max-width:700px) {
+  .operations-main { padding:24px 12px 55px; }
+  .business-day-row { grid-template-columns:1fr 1fr; }
+  .business-day-row > strong { grid-column:1/-1; }
+  .business-day-row > span { display:none; }
+  .operations-record-head,.operations-launch-card { display:grid; }
+  .operations-record-actions { width:100%; }
+  .operations-record-actions .btn { flex:1; }
+}

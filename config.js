@@ -15,6 +15,7 @@ window.DPRO_COSMETICS_CONFIG = Object.freeze({
   PICKUP_PAGE: "pickup.html",
   OWNER_PAGE: "owner.html",
   OWNER_IPAD_PAGE: "owner-ipad.html",
+  OWNER_SETTINGS_PAGE: "owner-settings.html",
   POLICY_VERSION: "2026-07",
   REQUEST_TIMEOUT_MS: 15000,
 });

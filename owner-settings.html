@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="DPRO化粧品店 店舗運営設定">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜店舗運営設定</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="owner-settings.js"></script>
+</head>
+<body class="operations-body">
+  <section id="operationsLoginView" class="owner-login-shell">
+    <div class="owner-login-card">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div class="brand-copy">
+          <span class="brand-title">DPROコスメティックサロン</span>
+          <span class="brand-subtitle">店舗運営設定</span>
+        </div>
+      </div>
+      <p class="eyebrow">OPERATIONS SIGN IN</p>
+      <h1>店舗設定を安全に管理</h1>
+      <p class="lead">営業時間、スタッフ、商品・在庫、休業日をまとめて管理します。</p>
+      <form id="operationsLoginForm" class="owner-login-form" novalidate>
+        <label for="operationsManagementCode">管理コード</label>
+        <div class="management-code-control">
+          <input id="operationsManagementCode" type="password" inputmode="numeric" maxlength="128" placeholder="管理コードを入力">
+          <button id="operationsToggleCode" class="code-action-button" type="button">表示</button>
+          <button id="operationsClearCode" class="code-action-button danger-text" type="button">削除</button>
+        </div>
+        <div id="operationsLoginError" class="alert danger" hidden></div>
+        <button id="operationsLoginButton" class="btn primary full-width" type="submit">設定画面を開く</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="operationsAppView" hidden>
+    <header class="owner-topbar">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div class="brand-copy">
+          <span id="operationsStoreName" class="brand-title">DPROコスメティックサロン</span>
+          <span class="brand-subtitle">店舗運営設定</span>
+        </div>
+      </div>
+      <div class="owner-topbar-actions">
+        <span id="operationsDemoBadge" class="demo-badge">デモ環境</span>
+        <button id="operationsRefreshButton" class="btn ghost compact" type="button">最新情報</button>
+        <a class="btn ghost compact" href="owner.html?demo=1">PC管理</a>
+        <a class="btn ghost compact" href="owner-ipad.html?demo=1">iPad</a>
+        <button id="operationsLogoutButton" class="btn ghost compact" type="button">終了</button>
+      </div>
+    </header>
+
+    <div class="operations-layout">
+      <aside class="operations-sidebar">
+        <button class="operations-nav is-active" type="button" data-operations-view="store">🏪 店舗・営業時間</button>
+        <button class="operations-nav" type="button" data-operations-view="staff">👥 スタッフ</button>
+        <button class="operations-nav" type="button" data-operations-view="products">💄 商品・在庫</button>
+        <button class="operations-nav" type="button" data-operations-view="holidays">📅 休業日</button>
+        <div class="owner-privacy-note">
+          <strong>安全設定</strong>
+          <p>変更内容は操作ログへ記録されます。予約枠と営業時間は30分単位です。</p>
+        </div>
+      </aside>
+
+      <main class="operations-main">
+        <div id="operationsGlobalError" class="alert danger" hidden></div>
+        <div id="operationsLoading" class="owner-loading" hidden><div class="spinner"></div><p>読み込んでいます</p></div>
+
+        <section id="operationsViewStore" class="operations-view">
+          <div class="owner-page-heading"><div><p class="eyebrow">STORE SETTINGS</p><h1>店舗・営業時間</h1><p>LINE画面や予約枠で使用する基本設定です。</p></div></div>
+          <form id="storeSettingsForm" class="card operations-form" novalidate>
+            <div class="form-grid">
+              <div class="field"><label for="storeName">店舗名</label><input id="storeName" maxlength="120" required></div>
+              <div class="field"><label for="storeSubtitle">説明</label><input id="storeSubtitle" maxlength="180"></div>
+              <div class="field"><label for="storePhone">電話番号</label><input id="storePhone" maxlength="30"></div>
+              <div class="field"><label for="storePostalCode">郵便番号</label><input id="storePostalCode" maxlength="12"></div>
+              <div class="field full"><label for="storeAddress">住所</label><input id="storeAddress" maxlength="240"></div>
+              <div class="field"><label for="holdExpireDays">取り置き期限（日）</label><input id="holdExpireDays" type="number" min="1" max="90"></div>
+              <div class="field"><label for="sampleFollowupDays">サンプル確認（日後）</label><input id="sampleFollowupDays" type="number" min="1" max="365"></div>
+              <div class="field"><label for="maxSimultaneous">同時美容相談数</label><input id="maxSimultaneous" type="number" min="1" max="50"></div>
+              <div class="field"><label>予約枠</label><input value="30分固定" disabled></div>
+              <div class="field full">
+                <label class="operations-check"><input id="lineLinkApproval" type="checkbox"><span>既存顧客とのLINE連携は店舗承認を必須にする</span></label>
+              </div>
+            </div>
+            <h2 class="operations-subheading">営業時間</h2>
+            <div id="businessHoursEditor" class="business-hours-editor"></div>
+            <button class="btn primary operations-save" type="submit">店舗設定を保存</button>
+          </form>
+        </section>
+
+        <section id="operationsViewStaff" class="operations-view" hidden>
+          <div class="owner-page-heading">
+            <div><p class="eyebrow">STAFF</p><h1>スタッフ管理</h1><p>接客担当と機密メモの閲覧権限を管理します。</p></div>
+            <button id="addStaffButton" class="btn primary" type="button">スタッフを追加</button>
+          </div>
+          <div id="staffList" class="operations-card-grid"></div>
+        </section>
+
+        <section id="operationsViewProducts" class="operations-view" hidden>
+          <div class="owner-page-heading">
+            <div><p class="eyebrow">PRODUCTS & INVENTORY</p><h1>商品・在庫管理</h1><p>商品情報、価格、在庫状態、入荷予定を管理します。</p></div>
+            <button id="addProductButton" class="btn primary" type="button">商品を追加</button>
+          </div>
+          <section class="card operations-search">
+            <input id="productSearchInput" type="search" placeholder="商品名・ブランド・SKUで検索">
+          </section>
+          <div id="productList" class="operations-card-grid"></div>
+        </section>
+
+        <section id="operationsViewHolidays" class="operations-view" hidden>
+          <div class="owner-page-heading">
+            <div><p class="eyebrow">HOLIDAYS</p><h1>休業日管理</h1><p>臨時休業や部分休業を予約可能時間へ反映します。</p></div>
+            <button id="addHolidayButton" class="btn primary" type="button">休業日を追加</button>
+          </div>
+          <div id="holidayList" class="operations-card-grid"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="staffDialog" class="modal-dialog operations-dialog">
+    <form id="staffForm" class="modal-card" novalidate>
+      <input id="staffId" type="hidden">
+      <p class="eyebrow">STAFF EDIT</p><h2 id="staffDialogTitle">スタッフを追加</h2>
+      <div class="form-grid">
+        <div class="field"><label for="staffCode">スタッフコード</label><input id="staffCode" maxlength="32" required></div>
+        <div class="field"><label for="staffName">表示名</label><input id="staffName" maxlength="120" required></div>
+        <div class="field"><label for="staffRole">権限</label><select id="staffRole"><option value="owner">オーナー</option><option value="manager">店長</option><option value="staff">スタッフ</option><option value="viewer">閲覧のみ</option></select></div>
+        <div class="field"><label for="staffSort">表示順</label><input id="staffSort" type="number" min="0" max="9999" value="100"></div>
+        <div class="field"><label for="staffPhone">電話番号</label><input id="staffPhone" maxlength="30"></div>
+        <div class="field"><label for="staffEmail">メール</label><input id="staffEmail" type="email" maxlength="180"></div>
+        <div class="field full"><label class="operations-check"><input id="staffCanConsult" type="checkbox" checked><span>美容相談の担当者として表示する</span></label></div>
+        <div class="field full"><label class="operations-check"><input id="staffSensitive" type="checkbox"><span>restricted内部メモを閲覧できる</span></label></div>
+        <div class="field full"><label class="operations-check"><input id="staffActive" type="checkbox" checked><span>有効なスタッフとして使用する</span></label></div>
+      </div>
+      <div id="staffFormError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="staffCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="productDialog" class="modal-dialog operations-dialog wide-dialog">
+    <form id="productForm" class="modal-card" novalidate>
+      <input id="productId" type="hidden"><input id="variantId" type="hidden">
+      <p class="eyebrow">PRODUCT EDIT</p><h2 id="productDialogTitle">商品を追加</h2>
+      <div class="form-grid">
+        <div class="field"><label for="brandCode">ブランドコード</label><input id="brandCode" maxlength="64"></div>
+        <div class="field"><label for="brandName">ブランド名</label><input id="brandName" maxlength="120"></div>
+        <div class="field"><label for="productCode">商品コード</label><input id="productCode" maxlength="64" required></div>
+        <div class="field"><label for="productName">商品名</label><input id="productName" maxlength="160" required></div>
+        <div class="field"><label for="productCategory">カテゴリ</label><select id="productCategory"></select></div>
+        <div class="field"><label for="usageDays">標準使用日数</label><input id="usageDays" type="number" min="1" max="730"></div>
+        <div class="field full"><label for="productDescription">商品説明</label><textarea id="productDescription" maxlength="1200"></textarea></div>
+        <div class="field"><label for="sku">SKU</label><input id="sku" maxlength="64" required></div>
+        <div class="field"><label for="variantName">色・容量など</label><input id="variantName" maxlength="160" required></div>
+        <div class="field"><label for="sizeLabel">サイズ表記</label><input id="sizeLabel" maxlength="80"></div>
+        <div class="field"><label for="capacityMl">容量（mL）</label><input id="capacityMl" type="number" step="0.01" min="0"></div>
+        <div class="field"><label for="priceYen">価格（税込）</label><input id="priceYen" type="number" min="0"></div>
+        <div class="field"><label for="barcode">バーコード</label><input id="barcode" maxlength="80"></div>
+        <div class="field"><label for="inventoryStatus">在庫状態</label><select id="inventoryStatus"></select></div>
+        <div class="field"><label for="inventoryQuantity">在庫数</label><input id="inventoryQuantity" type="number" min="0"></div>
+        <div class="field"><label for="arrivalDate">入荷予定日</label><input id="arrivalDate" type="date"></div>
+        <div class="field full"><label class="operations-check"><input id="sampleAvailable" type="checkbox"><span>サンプル提供可能</span></label></div>
+        <div class="field full"><label class="operations-check"><input id="productActive" type="checkbox" checked><span>商品を表示する</span></label></div>
+        <div class="field full"><label class="operations-check"><input id="variantActive" type="checkbox" checked><span>この色・容量を表示する</span></label></div>
+      </div>
+      <div id="productFormError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="productCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="holidayDialog" class="modal-dialog operations-dialog">
+    <form id="holidayForm" class="modal-card" novalidate>
+      <input id="holidayId" type="hidden">
+      <p class="eyebrow">HOLIDAY EDIT</p><h2 id="holidayDialogTitle">休業日を追加</h2>
+      <div class="form-grid">
+        <div class="field"><label for="holidayDate">日付</label><input id="holidayDate" type="date" required></div>
+        <div class="field"><label class="operations-check"><input id="holidayAllDay" type="checkbox" checked><span>終日休業</span></label></div>
+        <div class="field"><label for="holidayStart">開始時間</label><input id="holidayStart" type="time" step="1800"></div>
+        <div class="field"><label for="holidayEnd">終了時間</label><input id="holidayEnd" type="time" step="1800"></div>
+        <div class="field full"><label for="holidayReason">理由</label><input id="holidayReason" maxlength="240"></div>
+      </div>
+      <div id="holidayFormError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="holidayCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="operationsConfirmDialog" class="modal-dialog">
+    <div class="modal-card">
+      <p class="eyebrow">CONFIRMATION</p><h2 id="operationsConfirmTitle">確認</h2><p id="operationsConfirmMessage"></p>
+      <div class="modal-actions"><button id="operationsConfirmCancel" class="btn secondary" type="button">戻る</button><button id="operationsConfirmExecute" class="btn primary" type="button">実行する</button></div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
