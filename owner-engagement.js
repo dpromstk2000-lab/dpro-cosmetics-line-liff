@@ -217,6 +217,7 @@
     });
 
     const list = document.getElementById("inquiryAdminList");
+    list.classList.toggle("single-item", rows.length === 1);
     if (!rows.length) {
       list.innerHTML = empty("条件に一致する問合せはありません。");
       return;
@@ -301,6 +302,7 @@
     });
 
     const list = document.getElementById("followupAdminList");
+    list.classList.toggle("single-item", rows.length === 1);
     if (!rows.length) {
       list.innerHTML = empty("条件に一致するフォロー予定はありません。");
       return;
@@ -422,6 +424,7 @@
   function renderRepurchase() {
     const list = document.getElementById("repurchaseList");
     const rows = data?.repurchase_candidates || [];
+    list.classList.toggle("single-item", rows.length === 1);
     if (!rows.length) {
       list.innerHTML = empty("現在、再購入時期を迎えた候補はありません。");
       return;
@@ -474,6 +477,7 @@
   function renderCampaigns() {
     const list = document.getElementById("campaignAdminList");
     const rows = data?.campaigns || [];
+    list.classList.toggle("single-item", rows.length === 1);
     if (!rows.length) {
       list.innerHTML = empty("キャンペーンはまだありません。");
       return;

@@ -28,6 +28,7 @@
 
   function render(items) {
     const list=document.getElementById("campaignsList");
+    list.classList.toggle("single-item", items.length === 1);
     if(!items.length){
       list.innerHTML=`<div class="card empty-state"><p>現在公開中のお知らせはありません。</p></div>`;
       return;
