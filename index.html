@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="美容相談・商品取り置き・購入履歴・再購入フォローをLINEで一元管理">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev https://api.line.me; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜LINE会員ページ</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-copy">
+          <span class="brand-title" data-store-name>DPROコスメティックサロン</span>
+          <span class="brand-subtitle" data-store-subtitle>美容相談・取り置き・再購入フォロー</span>
+        </div>
+      </div>
+      <span id="demoBadge" class="demo-badge" hidden>デモ環境</span>
+    </header>
+
+    <main id="main" class="main">
+      <section class="hero" aria-labelledby="heroTitle">
+        <div>
+          <p class="eyebrow">DPRO Cosmetics LINE</p>
+          <h1 id="heroTitle">いつもの美容相談と<br>お買い物を、もっと簡単に。</h1>
+          <p class="lead">相談予約、商品のお取り置き、購入履歴、再購入のご依頼をLINEから確認できます。</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="cosmetic-orbit">
+            <div class="orbit-ring"></div>
+            <div class="orbit-center">✦</div>
+            <div class="orbit-dot one">🧴</div>
+            <div class="orbit-dot two">💄</div>
+            <div class="orbit-dot three">🪞</div>
+            <div class="orbit-dot four">🌿</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-area" aria-live="polite">
+        <div id="loadingView" class="card loading-card">
+          <div class="spinner" aria-hidden="true"></div>
+          <h2>会員情報を確認しています</h2>
+          <p class="member-meta">画面を閉じずに、そのままお待ちください。</p>
+        </div>
+
+        <div id="memberView" hidden>
+          <div class="card">
+            <div class="welcome-grid">
+              <div>
+                <p class="eyebrow">Welcome back</p>
+                <h2 id="memberName" class="member-name">お客様 様</h2>
+                <p class="member-meta">前回の情報をLINEから取得しました。氏名・電話番号の再入力は不要です。</p>
+              </div>
+              <div id="memberAvatar" class="avatar" aria-hidden="true">D</div>
+            </div>
+            <div id="nextReservationBox" class="alert info" hidden>
+              <strong>次回の美容相談：</strong><span id="nextReservationText"></span>
+            </div>
+            <div class="summary-strip">
+              <div class="summary-item"><span class="summary-label">会員番号</span><span id="customerNo" class="summary-value">―</span></div>
+              <div class="summary-item"><span class="summary-label">最終購入日</span><span id="lastPurchase" class="summary-value">―</span></div>
+              <div class="summary-item"><span class="summary-label">受取待ち</span><span id="activeHoldCount" class="summary-value">0件</span></div>
+            </div>
+          </div>
+
+          <section class="menu-section" aria-labelledby="menuTitle">
+            <div class="section-heading">
+              <div><p class="eyebrow">LINE MENU</p><h2 id="menuTitle">ご利用メニュー</h2></div>
+              <p>必要な操作を選んでください</p>
+            </div>
+            <div class="menu-grid">
+              <button class="menu-button primary" type="button" data-coming-soon="美容相談予約はSTEP COSMETICS-4で実装します。">
+                <span class="coming-soon">次STEP</span><span class="menu-icon">🗓️</span><span class="menu-title">美容相談を予約</span><span class="menu-desc">商品選びや使い方をスタッフへ相談</span>
+              </button>
+              <button class="menu-button" type="button" data-coming-soon="商品取り置きはSTEP COSMETICS-5で実装します。">
+                <span class="coming-soon">準備中</span><span class="menu-icon">🛍️</span><span class="menu-title">商品を取り置く</span><span class="menu-desc">商品・色・容量を選び、店頭受取を依頼</span>
+              </button>
+              <button class="menu-button" type="button" data-coming-soon="再購入依頼はSTEP COSMETICS-5で実装します。">
+                <span class="coming-soon">準備中</span><span class="menu-icon">🔁</span><span class="menu-title">いつもの商品</span><span class="menu-desc">以前購入した商品を簡単に再注文</span>
+              </button>
+              <button id="memberPageButton" class="menu-button" type="button">
+                <span class="menu-icon">👤</span><span class="menu-title">マイページ</span><span class="menu-desc">会員情報、予約、取り置き、購入履歴</span>
+              </button>
+              <button class="menu-button" type="button" data-coming-soon="商品問合せはSTEP COSMETICS-10で実装します。">
+                <span class="coming-soon">準備中</span><span class="menu-icon">💬</span><span class="menu-title">商品について質問</span><span class="menu-desc">使い方、返品・交換、使用後の相談</span>
+              </button>
+              <button class="menu-button" type="button" data-coming-soon="キャンペーン表示は後続STEPで実装します。">
+                <span class="coming-soon">準備中</span><span class="menu-icon">✨</span><span class="menu-title">新商品・キャンペーン</span><span class="menu-desc">店舗からのお知らせを確認</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div id="registerView" class="card" hidden>
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">FIRST REGISTRATION</p>
+              <h2>初回会員登録</h2>
+              <p id="registerIntro">初回のみ、氏名と電話番号を登録してください。</p>
+            </div>
+            <div class="status-icon" aria-hidden="true">✍️</div>
+          </div>
+          <div class="alert info">登録後はLINEユーザー情報から会員情報を取得するため、次回から基本情報の入力を省略できます。</div>
+          <div id="formError" class="alert danger" role="alert" hidden></div>
+          <form id="registerForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="fullName">氏名<span class="required">必須</span></label>
+                <input id="fullName" name="full_name" type="text" maxlength="100" autocomplete="name" placeholder="例：鈴木 花子" required>
+              </div>
+              <div class="field">
+                <label for="fullNameKana">氏名カナ</label>
+                <input id="fullNameKana" name="full_name_kana" type="text" maxlength="100" autocomplete="off" placeholder="例：スズキ ハナコ">
+              </div>
+              <div class="field full">
+                <label for="phone">電話番号<span class="required">必須</span></label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" maxlength="40" autocomplete="tel" placeholder="例：090-1111-2222" required>
+                <span class="hint">ハイフン、空白、全角数字、+81形式でも登録できます。</span>
+              </div>
+            </div>
+
+            <div class="check-list">
+              <div class="check-row">
+                <input id="privacyConsent" name="privacy_consent" type="checkbox" required>
+                <label for="privacyConsent">個人情報の利用目的に同意します<span class="required">必須</span><small>会員管理、予約、取り置き、購入履歴、店舗からの必要な連絡に使用します。</small></label>
+              </div>
+              <div class="check-row">
+                <input id="lineLinkConsent" name="line_link_consent" type="checkbox" required>
+                <label for="lineLinkConsent">LINEアカウントと会員情報の連携に同意します<span class="required">必須</span><small>2回目以降の氏名・電話番号入力を省略するために使用します。</small></label>
+              </div>
+              <div class="check-row">
+                <input id="marketingConsent" name="marketing_consent" type="checkbox">
+                <label for="marketingConsent">新商品・キャンペーンの案内を受け取る<small>任意です。後から変更できるようにします。</small></label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button id="registerButton" class="btn primary" type="submit">同意して会員登録する</button>
+            </div>
+          </form>
+          <div class="demo-switcher" aria-label="デモ表示切替">
+            <a href="?demo=1">既存顧客デモを見る</a>
+            <a href="?demo=new">初回登録デモを見る</a>
+          </div>
+        </div>
+
+        <div id="pendingView" class="card" hidden>
+          <div class="card-header">
+            <div><p class="eyebrow">CONFIRMATION</p><h2>店舗で確認しています</h2><p id="pendingMessage">既存の顧客情報との連携を確認しています。</p></div>
+            <div class="status-icon" aria-hidden="true">🔎</div>
+          </div>
+          <div class="alert warning">誤って別のお客様の購入履歴を表示しないため、既存情報との連携は店舗確認後に有効になります。</div>
+          <a class="btn secondary" href="?demo=1">トップへ戻る</a>
+        </div>
+
+        <div id="errorView" class="card" hidden>
+          <div class="card-header">
+            <div><p class="eyebrow">ERROR</p><h2>画面を読み込めませんでした</h2><p id="errorMessage">通信環境を確認してください。</p></div>
+            <div class="status-icon" aria-hidden="true">⚠️</div>
+          </div>
+          <button id="retryButton" class="btn primary" type="button">もう一度読み込む</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><span data-store-name>DPROコスメティックサロン</span>｜LINE会員システム</footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

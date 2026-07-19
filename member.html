@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3f2734">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev https://api.line.me; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'">
+  <title>DPROコスメティックサロン｜マイページ</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="member.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">D</div><div class="brand-copy"><span class="brand-title" data-store-name>DPROコスメティックサロン</span><span class="brand-subtitle">会員マイページ</span></div></div>
+      <span id="demoBadge" class="demo-badge" hidden>デモ環境</span>
+    </header>
+
+    <main id="main" class="main">
+      <div class="section-heading">
+        <div><p class="eyebrow">MEMBER PAGE</p><h1 id="pageName">マイページ</h1></div>
+        <a id="backLink" class="btn soft" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="loadingView" class="card loading-card"><div class="spinner" aria-hidden="true"></div><h2>会員情報を読み込んでいます</h2></div>
+
+      <div id="notReadyView" class="card" hidden>
+        <div class="card-header"><div><p class="eyebrow">MEMBER STATUS</p><h2>マイページを表示できません</h2><p id="notReadyMessage">会員登録を確認してください。</p></div><div class="status-icon" aria-hidden="true">🔐</div></div>
+        <a id="notReadyBack" class="btn primary" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="memberContent" hidden>
+        <section class="card" aria-labelledby="basicTitle">
+          <div class="card-header"><div><p class="eyebrow">PROFILE</p><h2 id="basicTitle">会員情報</h2><p>LINEに連携されている基本情報です。</p></div><div class="status-icon" aria-hidden="true">👤</div></div>
+          <dl class="definition-list">
+            <dt>会員番号</dt><dd id="customerNo">―</dd>
+            <dt>氏名</dt><dd id="fullName">―</dd>
+            <dt>氏名カナ</dt><dd id="fullNameKana">―</dd>
+            <dt>電話番号</dt><dd id="phone">―</dd>
+            <dt>最終来店日</dt><dd id="lastVisit">―</dd>
+            <dt>最終購入日</dt><dd id="lastPurchase">―</dd>
+            <dt>商品案内</dt><dd id="marketingConsent">―</dd>
+            <dt>お気に入り</dt><dd id="favoriteCount">0件</dd>
+          </dl>
+        </section>
+
+        <section class="card" aria-labelledby="reservationTitle">
+          <div class="card-header"><div><p class="eyebrow">CONSULTATION</p><h2 id="reservationTitle">美容相談の予定</h2></div><div class="status-icon" aria-hidden="true">🗓️</div></div>
+          <div id="reservationContent"></div>
+        </section>
+
+        <section class="card" aria-labelledby="holdTitle">
+          <div class="card-header"><div><p class="eyebrow">PICKUP</p><h2 id="holdTitle">取り置き・再購入</h2></div><div class="status-icon" aria-hidden="true">🛍️</div></div>
+          <div id="holdContent"></div>
+        </section>
+
+        <section class="card" aria-labelledby="purchaseTitle">
+          <div class="card-header"><div><p class="eyebrow">PURCHASE</p><h2 id="purchaseTitle">最近の購入履歴</h2><p>商品明細は後続STEPで表示します。</p></div><div class="status-icon" aria-hidden="true">🧾</div></div>
+          <div id="purchaseContent"></div>
+        </section>
+      </div>
+    </main>
+    <footer class="footer"><span data-store-name>DPROコスメティックサロン</span>｜LINE会員システム</footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
