@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="DPRO化粧品店 問合せ・フォロー・再購入・キャンペーン管理">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜問合せ・販促管理</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="owner-engagement.js"></script>
+</head>
+<body class="engagement-body">
+  <section id="engagementLoginView" class="owner-login-shell">
+    <div class="owner-login-card">
+      <div class="brand"><div class="brand-mark">D</div><div class="brand-copy"><span class="brand-title">DPROコスメティックサロン</span><span class="brand-subtitle">問合せ・フォロー・キャンペーン管理</span></div></div>
+      <p class="eyebrow">ENGAGEMENT SIGN IN</p>
+      <h1>お客様対応と再来店を一元管理</h1>
+      <p class="lead">問合せの回答、次回フォロー、再購入候補、キャンペーン対象を管理します。</p>
+      <form id="engagementLoginForm" class="owner-login-form" novalidate>
+        <label for="engagementManagementCode">管理コード</label>
+        <div class="management-code-control">
+          <input id="engagementManagementCode" type="password" inputmode="numeric" maxlength="128" placeholder="管理コードを入力">
+          <button id="engagementToggleCode" class="code-action-button" type="button">表示</button>
+          <button id="engagementClearCode" class="code-action-button danger-text" type="button">削除</button>
+        </div>
+        <div id="engagementLoginError" class="alert danger" hidden></div>
+        <button class="btn primary full-width" type="submit">管理画面を開く</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="engagementAppView" hidden>
+    <header class="owner-topbar">
+      <div class="brand"><div class="brand-mark">D</div><div class="brand-copy"><span id="engagementStoreName" class="brand-title">DPROコスメティックサロン</span><span class="brand-subtitle">問合せ・販促管理</span></div></div>
+      <div class="owner-topbar-actions">
+        <span id="engagementDemoBadge" class="demo-badge">デモ環境</span>
+        <button id="engagementRefreshButton" class="btn ghost compact" type="button">最新情報</button>
+        <a class="btn ghost compact" href="owner.html?demo=1">PC管理</a>
+        <a class="btn ghost compact" href="owner-settings.html?demo=1">店舗設定</a>
+        <button id="engagementLogoutButton" class="btn ghost compact" type="button">終了</button>
+      </div>
+    </header>
+
+    <nav class="engagement-tabbar" aria-label="問合せ・販促メニュー">
+      <button class="engagement-tab is-active" type="button" data-engagement-view="inquiries">💬 問合せ</button>
+      <button class="engagement-tab" type="button" data-engagement-view="followups">🔔 フォロー</button>
+      <button class="engagement-tab" type="button" data-engagement-view="repurchase">🔁 再購入候補</button>
+      <button class="engagement-tab" type="button" data-engagement-view="campaigns">✨ キャンペーン</button>
+    </nav>
+
+    <main class="engagement-main">
+      <div id="engagementGlobalError" class="alert danger" hidden></div>
+      <div id="engagementLoading" class="owner-loading" hidden><div class="spinner"></div><p>読み込んでいます</p></div>
+      <section id="engagementSummary" class="engagement-summary"></section>
+
+      <section id="engagementViewInquiries" class="engagement-view">
+        <div class="owner-page-heading">
+          <div><p class="eyebrow">CUSTOMER INQUIRIES</p><h1>問合せ対応</h1><p>使用後の相談や返品・交換は優先度を上げて表示します。</p></div>
+        </div>
+        <section class="card engagement-filter">
+          <select id="inquiryStatusFilter"><option value="all">すべての状態</option><option value="new">受付済み</option><option value="in_progress">確認中</option><option value="waiting_customer">お客様確認待ち</option><option value="waiting_manufacturer">メーカー確認中</option><option value="resolved">回答済み</option><option value="closed">終了</option></select>
+          <select id="inquiryPriorityFilter"><option value="all">すべての優先度</option><option value="urgent">至急</option><option value="high">高</option><option value="normal">通常</option><option value="low">低</option></select>
+          <input id="inquirySearch" type="search" placeholder="顧客名・件名・問合せ番号で検索">
+        </section>
+        <div id="inquiryAdminList" class="engagement-card-list"></div>
+      </section>
+
+      <section id="engagementViewFollowups" class="engagement-view" hidden>
+        <div class="owner-page-heading">
+          <div><p class="eyebrow">FOLLOW UPS</p><h1>フォロー予定</h1><p>相談後、サンプル後、問合せ、再購入の次回対応を管理します。</p></div>
+          <button id="addFollowupButton" class="btn primary" type="button">フォローを追加</button>
+        </div>
+        <section class="card engagement-filter">
+          <select id="followupStatusFilter"><option value="open_group">未完了</option><option value="all">すべて</option><option value="open">未対応</option><option value="scheduled">予定</option><option value="contacted">連絡済み</option><option value="waiting">返信待ち</option><option value="completed">完了</option><option value="cancelled">キャンセル</option><option value="not_needed">対応不要</option></select>
+          <select id="followupTypeFilter"><option value="all">すべての種別</option><option value="repurchase">再購入</option><option value="sample">サンプル</option><option value="birthday">誕生日</option><option value="consultation">美容相談</option><option value="inquiry">問合せ</option><option value="incident">重要対応</option><option value="manual">手動</option></select>
+          <input id="followupSearch" type="search" placeholder="顧客名・件名で検索">
+        </section>
+        <div id="followupAdminList" class="engagement-card-list"></div>
+      </section>
+
+      <section id="engagementViewRepurchase" class="engagement-view" hidden>
+        <div class="owner-page-heading">
+          <div><p class="eyebrow">REPURCHASE</p><h1>再購入候補</h1><p>購入日と標準使用日数から、再購入時期を迎えた商品を抽出します。</p></div>
+        </div>
+        <div class="alert info">LINEでの再購入案内は、マーケティング案内に同意しているお客様だけ作成できます。同意のない顧客へ販促案内は送りません。</div>
+        <div id="repurchaseList" class="engagement-card-list"></div>
+      </section>
+
+      <section id="engagementViewCampaigns" class="engagement-view" hidden>
+        <div class="owner-page-heading">
+          <div><p class="eyebrow">CAMPAIGNS</p><h1>キャンペーン管理</h1><p>公開文面と対象候補を管理します。自動一斉送信は行いません。</p></div>
+          <button id="addCampaignButton" class="btn primary" type="button">キャンペーンを追加</button>
+        </div>
+        <div class="alert warning">対象作成はマーケティング同意済み・LINE連携承認済みの顧客だけです。実際の送信はLINE公式アカウント側で内容を確認して行ってください。</div>
+        <div class="campaign-admin-layout">
+          <div id="campaignAdminList" class="engagement-card-list"></div>
+          <aside class="card campaign-target-panel">
+            <div><p class="eyebrow">TARGETS</p><h2 id="campaignTargetTitle">配信対象</h2><p id="campaignTargetHelp">キャンペーンを選択してください。</p></div>
+            <div id="campaignTargetControls" hidden>
+              <label for="campaignSegment">対象条件</label>
+              <select id="campaignSegment">
+                <option value="all_marketing">案内同意済みの全会員</option>
+                <option value="repurchase_due">再購入時期を迎えた顧客</option>
+                <option value="birthday_30d">30日以内に誕生日</option>
+                <option value="sample_due">サンプル確認時期</option>
+              </select>
+              <button id="generateTargetsButton" class="btn primary full-width" type="button">対象候補を作成</button>
+              <button id="copyCampaignContentButton" class="btn secondary full-width" type="button">公開文面をコピー</button>
+            </div>
+            <div id="campaignTargetList" class="campaign-target-list"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="inquiryEditDialog" class="modal-dialog engagement-dialog">
+    <form id="inquiryEditForm" class="modal-card" novalidate>
+      <input id="editInquiryId" type="hidden">
+      <p class="eyebrow">INQUIRY RESPONSE</p><h2 id="editInquiryTitle">問合せへ回答</h2>
+      <div id="editInquiryOriginal" class="inquiry-original"></div>
+      <div class="form-grid">
+        <div class="field"><label for="editInquiryStatus">状態</label><select id="editInquiryStatus"><option value="new">受付済み</option><option value="in_progress">確認中</option><option value="waiting_customer">お客様確認待ち</option><option value="waiting_manufacturer">メーカー確認中</option><option value="resolved">回答済み</option><option value="closed">終了</option></select></div>
+        <div class="field"><label for="editInquiryPriority">優先度</label><select id="editInquiryPriority"><option value="low">低</option><option value="normal">通常</option><option value="high">高</option><option value="urgent">至急</option></select></div>
+        <div class="field full"><label for="editInquiryStaff">担当スタッフ</label><select id="editInquiryStaff"></select></div>
+        <div class="field full"><label for="editInquiryResponse">お客様への回答・対応結果</label><textarea id="editInquiryResponse" maxlength="3000"></textarea></div>
+        <div class="field full"><label class="engagement-check"><input id="editInquiryVisible" type="checkbox" checked><span>回答をお客様の問合せ画面へ表示する</span></label></div>
+        <div class="field full"><label class="engagement-check"><input id="editInquiryManufacturer" type="checkbox"><span>メーカー確認が必要</span></label></div>
+      </div>
+      <div id="inquiryEditError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="inquiryEditCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="followupEditDialog" class="modal-dialog engagement-dialog">
+    <form id="followupEditForm" class="modal-card" novalidate>
+      <input id="editFollowupId" type="hidden"><input id="editFollowupCustomerId" type="hidden">
+      <p class="eyebrow">FOLLOW UP EDIT</p><h2 id="followupDialogTitle">フォローを追加</h2>
+      <div id="followupCustomerSearchArea">
+        <label for="followupCustomerQuery">顧客検索</label>
+        <div class="engagement-customer-search"><input id="followupCustomerQuery" type="search" placeholder="氏名・電話番号・顧客番号"><button id="followupCustomerSearchButton" class="btn secondary" type="button">検索</button></div>
+        <div id="followupCustomerResults" class="customer-search-results"></div>
+      </div>
+      <div id="selectedFollowupCustomer" class="selected-customer" hidden></div>
+      <div class="form-grid">
+        <div class="field"><label for="editFollowupType">種別</label><select id="editFollowupType"><option value="manual">手動</option><option value="repurchase">再購入</option><option value="sample">サンプル</option><option value="birthday">誕生日</option><option value="consultation">美容相談</option><option value="inquiry">問合せ</option><option value="incident">重要対応</option></select></div>
+        <div class="field"><label for="editFollowupDue">日時</label><input id="editFollowupDue" type="datetime-local"></div>
+        <div class="field"><label for="editFollowupStatus">状態</label><select id="editFollowupStatus"><option value="open">未対応</option><option value="scheduled">予定</option><option value="contacted">連絡済み</option><option value="waiting">返信待ち</option><option value="completed">完了</option><option value="cancelled">キャンセル</option><option value="not_needed">対応不要</option></select></div>
+        <div class="field"><label for="editFollowupPriority">優先度</label><select id="editFollowupPriority"><option value="low">低</option><option value="normal">通常</option><option value="high">高</option><option value="urgent">至急</option></select></div>
+        <div class="field"><label for="editFollowupStaff">担当スタッフ</label><select id="editFollowupStaff"></select></div>
+        <div class="field"><label for="editFollowupChannel">連絡方法</label><select id="editFollowupChannel"><option value="line">LINE</option><option value="phone">電話</option><option value="email">メール</option><option value="in_person">店頭</option><option value="none">連絡なし</option></select></div>
+        <div class="field full"><label for="editFollowupSubject">件名</label><input id="editFollowupSubject" maxlength="200"></div>
+        <div class="field full"><label for="editFollowupNote">確認内容・結果</label><textarea id="editFollowupNote" maxlength="1500"></textarea></div>
+      </div>
+      <div id="followupEditError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="followupEditCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="campaignEditDialog" class="modal-dialog engagement-dialog">
+    <form id="campaignEditForm" class="modal-card" novalidate>
+      <input id="editCampaignId" type="hidden">
+      <p class="eyebrow">CAMPAIGN EDIT</p><h2 id="campaignDialogTitle">キャンペーンを追加</h2>
+      <div class="form-grid">
+        <div class="field"><label for="editCampaignCode">キャンペーンコード</label><input id="editCampaignCode" maxlength="64"></div>
+        <div class="field"><label for="editCampaignName">キャンペーン名</label><input id="editCampaignName" maxlength="160"></div>
+        <div class="field"><label for="editCampaignType">種別</label><select id="editCampaignType"><option value="general">一般</option><option value="new_product">新商品</option><option value="brand">ブランド</option><option value="birthday">誕生日</option><option value="repurchase">再購入</option><option value="coupon">クーポン</option></select></div>
+        <div class="field"><label for="editCampaignStatus">状態</label><select id="editCampaignStatus"><option value="draft">下書き</option><option value="approved">承認済み</option><option value="active">公開中</option><option value="paused">一時停止</option><option value="completed">終了</option><option value="cancelled">中止</option></select></div>
+        <div class="field"><label for="editCampaignStart">開始日時</label><input id="editCampaignStart" type="datetime-local"></div>
+        <div class="field"><label for="editCampaignEnd">終了日時</label><input id="editCampaignEnd" type="datetime-local"></div>
+        <div class="field full"><label for="editCampaignContent">公開・案内文</label><textarea id="editCampaignContent" maxlength="3000" placeholder="お客様へ表示・案内する文面を入力してください。"></textarea></div>
+      </div>
+      <div id="campaignEditError" class="alert danger" hidden></div>
+      <div class="modal-actions"><button id="campaignEditCancel" class="btn secondary" type="button">戻る</button><button class="btn primary" type="submit">保存する</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="engagementConfirmDialog" class="modal-dialog">
+    <div class="modal-card"><p class="eyebrow">CONFIRMATION</p><h2 id="engagementConfirmTitle">確認</h2><p id="engagementConfirmMessage"></p><div class="modal-actions"><button id="engagementConfirmCancel" class="btn secondary" type="button">戻る</button><button id="engagementConfirmExecute" class="btn primary" type="button">実行する</button></div></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

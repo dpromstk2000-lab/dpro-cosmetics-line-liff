@@ -39,6 +39,12 @@
     document.getElementById("memberPageButton")?.addEventListener("click", () => {
       window.location.href = `${D.config.MEMBER_PAGE}${D.querySuffix()}`;
     });
+    document.getElementById("inquiryButton")?.addEventListener("click", () => {
+      window.location.href = `${D.config.INQUIRY_PAGE}${D.querySuffix()}`;
+    });
+    document.getElementById("campaignsButton")?.addEventListener("click", () => {
+      window.location.href = `${D.config.CAMPAIGNS_PAGE}${D.querySuffix()}`;
+    });
     document.getElementById("retryButton")?.addEventListener("click", () => window.location.reload());
   }
 
