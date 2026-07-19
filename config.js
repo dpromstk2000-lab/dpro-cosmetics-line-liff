@@ -19,6 +19,7 @@ window.DPRO_COSMETICS_CONFIG = Object.freeze({
   INQUIRY_PAGE: "inquiry.html",
   CAMPAIGNS_PAGE: "campaigns.html",
   OWNER_ENGAGEMENT_PAGE: "owner-engagement.html",
+  SYSTEM_CHECK_PAGE: "system-check.html",
   POLICY_VERSION: "2026-07",
   REQUEST_TIMEOUT_MS: 15000,
 });
