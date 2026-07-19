@@ -9,6 +9,7 @@
     document.getElementById("backLink").href = `index.html${D.querySuffix()}`;
     document.getElementById("notReadyBack").href = `index.html${D.querySuffix()}`;
     document.getElementById("consultationLink").href = `${D.config.CONSULTATION_PAGE}${D.querySuffix()}`;
+    document.getElementById("pickupLink").href = `${D.config.PICKUP_PAGE}${D.querySuffix()}`;
     try {
       const [bootstrap, identityPayload] = await Promise.all([
         D.request("/public/bootstrap"),

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="DPROコスメティックサロン 商品取り置き・再購入">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev https://api.line.me; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜商品取り置き・再購入</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="pickup.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-copy">
+          <span class="brand-title" data-store-name>DPROコスメティックサロン</span>
+          <span class="brand-subtitle">商品取り置き・再購入</span>
+        </div>
+      </div>
+      <span id="demoBadge" class="demo-badge" hidden>デモ環境</span>
+    </header>
+
+    <main id="main" class="main pickup-main">
+      <div class="section-heading pickup-page-heading">
+        <div>
+          <p class="eyebrow">PICKUP &amp; REPURCHASE</p>
+          <h1>商品を取り置く・再購入</h1>
+          <p>店頭で受け取る商品を選び、受取希望日を送信してください。</p>
+        </div>
+        <a id="backLink" class="btn soft" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="loadingView" class="card loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h2>商品と購入履歴を読み込んでいます</h2>
+        <p class="member-meta">画面を閉じずに、そのままお待ちください。</p>
+      </div>
+
+      <div id="notReadyView" class="card" hidden>
+        <div class="card-header">
+          <div><p class="eyebrow">MEMBER STATUS</p><h2>商品画面を利用できません</h2><p id="notReadyMessage">会員登録を確認してください。</p></div>
+          <div class="status-icon" aria-hidden="true">🔐</div>
+        </div>
+        <a id="notReadyBack" class="btn primary" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="pickupContent" hidden>
+        <section class="card active-hold-card" aria-labelledby="activeHoldTitle">
+          <div class="card-header compact">
+            <div>
+              <p class="eyebrow">YOUR PICKUPS</p>
+              <h2 id="activeHoldTitle"><span id="memberName">お客様</span>の取り置き状況</h2>
+              <p>受付中・在庫確認中・受取可能の商品を確認できます。</p>
+            </div>
+            <div class="status-icon" aria-hidden="true">🛍️</div>
+          </div>
+          <div id="activeHoldList"></div>
+        </section>
+
+        <section class="pickup-layout" aria-label="商品取り置きフォーム">
+          <div class="pickup-catalog-column">
+            <section class="card pickup-toolbar-card">
+              <div class="pickup-tabs" role="tablist" aria-label="商品表示切替">
+                <button class="pickup-tab is-active" type="button" data-view="catalog" role="tab" aria-selected="true">商品から選ぶ</button>
+                <button class="pickup-tab" type="button" data-view="history" role="tab" aria-selected="false">購入履歴から再購入</button>
+                <button class="pickup-tab" type="button" data-view="favorites" role="tab" aria-selected="false">お気に入り</button>
+              </div>
+              <div class="product-filter-grid">
+                <div class="field">
+                  <label for="productSearch">商品検索</label>
+                  <input id="productSearch" type="text" maxlength="100" placeholder="商品名・ブランド・色・容量で検索">
+                </div>
+                <div class="field">
+                  <label for="categoryFilter">カテゴリ</label>
+                  <select id="categoryFilter"><option value="">すべてのカテゴリ</option></select>
+                </div>
+              </div>
+              <p id="catalogStatus" class="member-meta" aria-live="polite"></p>
+            </section>
+
+            <section class="card product-section" aria-labelledby="productListTitle">
+              <div class="step-heading compact-step-heading">
+                <span class="step-number">1</span>
+                <div><h2 id="productListTitle">商品を選ぶ</h2><p>色・容量を確認し「カートに追加」を押してください。</p></div>
+              </div>
+              <div id="productList" class="product-grid"></div>
+            </section>
+          </div>
+
+          <aside class="pickup-cart-column" aria-labelledby="cartTitle">
+            <section class="card pickup-cart-card">
+              <p class="eyebrow">YOUR REQUEST</p>
+              <h2 id="cartTitle">取り置き内容</h2>
+              <div id="cartEmpty" class="empty-state compact-empty">商品を選択してください。</div>
+              <div id="cartItems" class="cart-items"></div>
+              <dl class="cart-summary">
+                <dt>商品点数</dt><dd id="cartQuantity">0点</dd>
+                <dt>参考合計</dt><dd id="cartTotal">0円</dd>
+              </dl>
+              <div class="field">
+                <label for="pickupDate">受取希望日<span class="required">必須</span></label>
+                <input id="pickupDate" type="date" required>
+                <span id="pickupDateHint" class="hint"></span>
+              </div>
+              <div class="field">
+                <label for="customerNote">店舗への連絡事項</label>
+                <textarea id="customerNote" rows="3" maxlength="500" placeholder="例：夕方に受け取り予定です。色味を店頭でも確認したいです。"></textarea>
+                <span class="hint"><span id="noteCount">0</span>/500文字</span>
+              </div>
+              <div id="pickupError" class="alert danger" role="alert" hidden></div>
+              <button id="submitPickupButton" class="btn primary full" type="button" disabled>この内容で依頼する</button>
+              <p class="booking-note">在庫は店舗確認後に確定します。表示中の価格は参考価格です。</p>
+            </section>
+          </aside>
+        </section>
+      </div>
+
+      <div id="errorView" class="card" hidden>
+        <div class="card-header">
+          <div><p class="eyebrow">ERROR</p><h2>商品画面を読み込めませんでした</h2><p id="errorMessage">通信環境を確認してください。</p></div>
+          <div class="status-icon" aria-hidden="true">⚠️</div>
+        </div>
+        <button id="retryButton" class="btn primary" type="button">もう一度読み込む</button>
+      </div>
+    </main>
+
+    <footer class="footer"><span data-store-name>DPROコスメティックサロン</span>｜LINE会員システム</footer>
+  </div>
+
+  <dialog id="duplicateDialog" class="modal-dialog" aria-labelledby="duplicateDialogTitle">
+    <div class="modal-card duplicate-dialog-card">
+      <div class="card-header compact">
+        <div><p class="eyebrow">DUPLICATE CHECK</p><h2 id="duplicateDialogTitle">同じ商品を依頼中です</h2><p>処理方法を選んでください。</p></div>
+        <button id="closeDuplicateDialog" class="icon-button" aria-label="閉じる" type="button">×</button>
+      </div>
+      <div id="duplicateList" class="duplicate-list"></div>
+      <div class="duplicate-choice-grid">
+        <button id="mergeDuplicateButton" class="duplicate-choice" type="button"><strong>既存依頼へ数量を追加</strong><span>現在の取り置き番号にまとめます。</span></button>
+        <button id="separateDuplicateButton" class="duplicate-choice" type="button"><strong>別の依頼として登録</strong><span>既存依頼とは分けて新規作成します。</span></button>
+      </div>
+      <button id="cancelDuplicateButton" class="btn soft full" type="button">登録をやめる</button>
+    </div>
+  </dialog>
+
+  <dialog id="cancelHoldDialog" class="modal-dialog" aria-labelledby="cancelHoldDialogTitle">
+    <div class="modal-card">
+      <div class="card-header compact">
+        <div><p class="eyebrow">CANCEL</p><h2 id="cancelHoldDialogTitle">取り置きをキャンセル</h2><p id="cancelHoldText">内容を確認してください。</p></div>
+        <button id="closeCancelHoldDialog" class="icon-button" aria-label="閉じる" type="button">×</button>
+      </div>
+      <div class="field">
+        <label for="cancelHoldReason">理由（任意）</label>
+        <textarea id="cancelHoldReason" rows="3" maxlength="300" placeholder="例：購入予定が変更になったため"></textarea>
+      </div>
+      <div id="cancelHoldError" class="alert danger" role="alert" hidden></div>
+      <div class="modal-actions">
+        <button id="backCancelHoldButton" class="btn soft" type="button">戻る</button>
+        <button id="confirmCancelHoldButton" class="btn danger" type="button">キャンセルを確定</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

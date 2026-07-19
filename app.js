@@ -30,6 +30,12 @@
     document.getElementById("consultationButton")?.addEventListener("click", () => {
       window.location.href = `${D.config.CONSULTATION_PAGE}${D.querySuffix()}`;
     });
+    document.getElementById("pickupButton")?.addEventListener("click", () => {
+      window.location.href = `${D.config.PICKUP_PAGE}${D.querySuffix()}`;
+    });
+    document.getElementById("repurchaseButton")?.addEventListener("click", () => {
+      window.location.href = `${D.config.PICKUP_PAGE}${D.querySuffix()}${D.querySuffix() ? "&" : "?"}view=history`;
+    });
     document.getElementById("memberPageButton")?.addEventListener("click", () => {
       window.location.href = `${D.config.MEMBER_PAGE}${D.querySuffix()}`;
     });

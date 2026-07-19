@@ -12,6 +12,7 @@ window.DPRO_COSMETICS_CONFIG = Object.freeze({
 
   MEMBER_PAGE: "member.html",
   CONSULTATION_PAGE: "consultation.html",
+  PICKUP_PAGE: "pickup.html",
   POLICY_VERSION: "2026-07",
   REQUEST_TIMEOUT_MS: 15000,
 });
