@@ -27,6 +27,9 @@
     document.querySelectorAll("[data-coming-soon]").forEach((button) => {
       button.addEventListener("click", () => D.showToast(button.dataset.comingSoon));
     });
+    document.getElementById("consultationButton")?.addEventListener("click", () => {
+      window.location.href = `${D.config.CONSULTATION_PAGE}${D.querySuffix()}`;
+    });
     document.getElementById("memberPageButton")?.addEventListener("click", () => {
       window.location.href = `${D.config.MEMBER_PAGE}${D.querySuffix()}`;
     });

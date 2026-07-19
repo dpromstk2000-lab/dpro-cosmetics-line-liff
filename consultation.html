@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#3f2734">
+  <meta name="description" content="DPROコスメティックサロン 美容相談予約">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://dpro-cosmetics-line-api.dpromstk2000.workers.dev https://api.line.me; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'">
+  <title>DPROコスメティックサロン｜美容相談予約</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="config.js"></script>
+  <script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script defer src="common.js"></script>
+  <script defer src="consultation.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-copy">
+          <span class="brand-title" data-store-name>DPROコスメティックサロン</span>
+          <span class="brand-subtitle">美容相談予約</span>
+        </div>
+      </div>
+      <span id="demoBadge" class="demo-badge" hidden>デモ環境</span>
+    </header>
+
+    <main id="main" class="main consultation-main">
+      <div class="section-heading consultation-page-heading">
+        <div>
+          <p class="eyebrow">BEAUTY CONSULTATION</p>
+          <h1>美容相談を予約</h1>
+          <p>相談内容・担当者・日時を順番に選んでください。</p>
+        </div>
+        <a id="backLink" class="btn soft" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="loadingView" class="card loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h2>予約情報を読み込んでいます</h2>
+        <p class="member-meta">画面を閉じずに、そのままお待ちください。</p>
+      </div>
+
+      <div id="notReadyView" class="card" hidden>
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">MEMBER STATUS</p>
+            <h2>予約画面を利用できません</h2>
+            <p id="notReadyMessage">会員登録を確認してください。</p>
+          </div>
+          <div class="status-icon" aria-hidden="true">🔐</div>
+        </div>
+        <a id="notReadyBack" class="btn primary" href="index.html">トップへ戻る</a>
+      </div>
+
+      <div id="bookingContent" hidden>
+        <section class="card reservation-summary-card" aria-labelledby="memberBookingTitle">
+          <div class="card-header compact">
+            <div>
+              <p class="eyebrow">YOUR RESERVATIONS</p>
+              <h2 id="memberBookingTitle"><span id="memberName">お客様</span>の予約</h2>
+              <p>予約の確認・変更・キャンセルができます。</p>
+            </div>
+            <div class="status-icon" aria-hidden="true">🗓️</div>
+          </div>
+          <div id="upcomingReservations"></div>
+        </section>
+
+        <section class="booking-layout" aria-label="美容相談予約フォーム">
+          <div class="booking-form-column">
+            <section class="card booking-step" aria-labelledby="menuStepTitle">
+              <div class="step-heading">
+                <span class="step-number">1</span>
+                <div><h2 id="menuStepTitle">相談メニュー</h2><p>相談したい内容を選んでください。</p></div>
+              </div>
+              <div id="menuOptions" class="choice-grid menu-choice-grid" role="radiogroup" aria-label="相談メニュー"></div>
+            </section>
+
+            <section class="card booking-step" aria-labelledby="staffStepTitle">
+              <div class="step-heading">
+                <span class="step-number">2</span>
+                <div><h2 id="staffStepTitle">担当スタッフ</h2><p>指定がなければ「おまかせ」が最も予約しやすくなります。</p></div>
+              </div>
+              <div id="staffOptions" class="choice-grid staff-choice-grid" role="radiogroup" aria-label="担当スタッフ"></div>
+            </section>
+
+            <section class="card booking-step" aria-labelledby="dateStepTitle">
+              <div class="step-heading">
+                <span class="step-number">3</span>
+                <div><h2 id="dateStepTitle">予約日</h2><p>本日から90日先まで選択できます。</p></div>
+              </div>
+              <div class="date-control-row">
+                <div class="field date-field">
+                  <label for="bookingDate">予約日</label>
+                  <input id="bookingDate" type="date" required>
+                </div>
+                <button id="loadSlotsButton" class="btn secondary" type="button">空き時間を表示</button>
+              </div>
+              <div id="dateHint" class="hint"></div>
+            </section>
+
+            <section class="card booking-step" aria-labelledby="timeStepTitle">
+              <div class="step-heading">
+                <span class="step-number">4</span>
+                <div><h2 id="timeStepTitle">空き時間</h2><p>大きな時間ボタンから選択してください。</p></div>
+              </div>
+              <div id="slotStatus" class="alert info">メニュー・担当者・日付を選び、「空き時間を表示」を押してください。</div>
+              <div id="slotOptions" class="slot-grid" role="radiogroup" aria-label="空き時間"></div>
+            </section>
+
+            <section class="card booking-step" aria-labelledby="requestStepTitle">
+              <div class="step-heading">
+                <span class="step-number">5</span>
+                <div><h2 id="requestStepTitle">相談したいこと</h2><p>任意です。商品名やお悩みを事前に伝えられます。</p></div>
+              </div>
+              <div class="field">
+                <label for="consultationRequest">相談内容</label>
+                <textarea id="consultationRequest" rows="4" maxlength="500" placeholder="例：ファンデーションの色選びと、乾燥しにくい使い方を相談したいです。"></textarea>
+                <span class="hint"><span id="requestCount">0</span>/500文字</span>
+              </div>
+            </section>
+          </div>
+
+          <aside class="booking-confirm-column" aria-labelledby="confirmTitle">
+            <section class="card booking-confirm-card">
+              <p class="eyebrow">CONFIRMATION</p>
+              <h2 id="confirmTitle">予約内容</h2>
+              <dl class="booking-definition-list">
+                <dt>メニュー</dt><dd id="confirmMenu">未選択</dd>
+                <dt>担当</dt><dd id="confirmStaff">未選択</dd>
+                <dt>日時</dt><dd id="confirmDateTime">未選択</dd>
+                <dt>所要時間</dt><dd id="confirmDuration">―</dd>
+                <dt>料金</dt><dd id="confirmPrice">―</dd>
+              </dl>
+              <div id="bookingError" class="alert danger" role="alert" hidden></div>
+              <button id="submitBookingButton" class="btn primary full" type="button" disabled>この内容で予約する</button>
+              <button id="cancelEditButton" class="btn soft full" type="button" hidden>予約変更をやめる</button>
+              <p class="booking-note">予約確定後、同じ時間帯の二重予約はシステムが自動で防止します。</p>
+            </section>
+          </aside>
+        </section>
+      </div>
+
+      <div id="errorView" class="card" hidden>
+        <div class="card-header">
+          <div><p class="eyebrow">ERROR</p><h2>予約画面を読み込めませんでした</h2><p id="errorMessage">通信環境を確認してください。</p></div>
+          <div class="status-icon" aria-hidden="true">⚠️</div>
+        </div>
+        <button id="retryButton" class="btn primary" type="button">もう一度読み込む</button>
+      </div>
+    </main>
+
+    <footer class="footer"><span data-store-name>DPROコスメティックサロン</span>｜LINE会員システム</footer>
+  </div>
+
+  <dialog id="cancelDialog" class="modal-dialog" aria-labelledby="cancelDialogTitle">
+    <form method="dialog" class="modal-card">
+      <div class="card-header compact">
+        <div><p class="eyebrow">CANCEL</p><h2 id="cancelDialogTitle">予約をキャンセル</h2><p id="cancelReservationText">予約内容を確認してください。</p></div>
+        <button class="icon-button" value="close" aria-label="閉じる" type="submit">×</button>
+      </div>
+      <div class="field">
+        <label for="cancelReason">理由（任意）</label>
+        <textarea id="cancelReason" rows="3" maxlength="300" placeholder="例：都合がつかなくなったため"></textarea>
+      </div>
+      <div id="cancelError" class="alert danger" role="alert" hidden></div>
+      <div class="modal-actions">
+        <button class="btn soft" value="close" type="submit">戻る</button>
+        <button id="confirmCancelButton" class="btn danger" value="confirm" type="button">キャンセルを確定</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
