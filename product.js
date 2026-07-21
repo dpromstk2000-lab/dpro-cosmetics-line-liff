@@ -48,7 +48,14 @@
     renderVariant();
   }
 
-  function showImage(item) { $("mainImage").innerHTML = item?.public_url ? `<img src="${escapeHtml(item.public_url)}" alt="${escapeHtml(item.alt_text || product.product_name)}">` : '<div class="cos-placeholder" aria-hidden="true">✦</div>'; }
+  function showImage(item) {
+    const mainImage = $("mainImage");
+    const hasImage = Boolean(item?.public_url);
+    mainImage.classList.toggle("is-placeholder", !hasImage);
+    mainImage.innerHTML = hasImage
+      ? `<img src="${escapeHtml(item.public_url)}" alt="${escapeHtml(item.alt_text || product.product_name)}">`
+      : '<div class="cos-placeholder" aria-hidden="true">✦</div>';
+  }
   function renderVariant() {
     const variant = (product?.variants || []).find((v) => v.id === $("variantSelect").value) || product?.variants?.[0];
     if (!variant) { $("variantInfo").innerHTML = '<div class="cos-info"><span>商品種類</span><strong>店舗へ確認</strong></div>'; return; }

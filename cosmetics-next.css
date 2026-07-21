@@ -150,3 +150,57 @@ a { color: inherit; }
   .cos-care-product { grid-template-columns:70px minmax(0,1fr); }
   .cos-care-image { width:70px; height:70px; }
 }
+
+
+/* =========================================================
+   STEP COSMETICS-13-R1
+   Version: COSMETICS-13-R1-UI-SYSTEM-CHECK-15-20260721
+   ========================================================= */
+
+/* 濃色ヒーロー上の見出しを明示的に白へ固定 */
+.cos-hero h1 {
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(34, 18, 28, .22);
+}
+
+/* 商品詳細の右側を少し広くし、商品名の1文字落ちを防ぐ */
+.cos-detail {
+  grid-template-columns: minmax(0, .94fr) minmax(390px, 1.06fr);
+  align-items: start;
+}
+.cos-detail-copy {
+  min-width: 0;
+}
+.cos-detail-copy h1 {
+  max-width: 100%;
+  color: var(--cos-ink);
+  font-size: clamp(30px, 4.25vw, 46px);
+  line-height: 1.2;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+
+/* 商品画像未登録時だけ、過大な正方形余白を抑える */
+.cos-gallery-main.is-placeholder {
+  aspect-ratio: 4 / 3;
+  max-height: 520px;
+}
+.cos-gallery-main.is-placeholder .cos-placeholder {
+  min-height: 100%;
+  font-size: 46px;
+}
+
+/* 小さい画面では従来どおり1列 */
+@media (max-width: 820px) {
+  .cos-detail {
+    grid-template-columns: 1fr;
+  }
+  .cos-gallery-main.is-placeholder {
+    aspect-ratio: 4 / 3;
+    max-height: none;
+  }
+  .cos-detail-copy h1 {
+    font-size: clamp(30px, 8vw, 43px);
+  }
+}
