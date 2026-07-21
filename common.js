@@ -34,9 +34,9 @@
       });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.ok) {
-        const message = data?.error?.message || `通信に失敗しました（${response.status}）。`;
+        const message = data?.error?.message || data?.message || `通信に失敗しました（${response.status}）。`;
         const error = new Error(message);
-        error.code = data?.error?.code || "API_ERROR";
+        error.code = data?.error?.code || data?.code || "API_ERROR";
         error.status = response.status;
         error.requestId = data?.request_id || null;
         throw error;
@@ -90,6 +90,15 @@
     return demoScenario ? `?demo=${demoScenario === "returning" ? "1" : "new"}` : "";
   }
 
+  function appendQuery(url, paramsToAdd = {}) {
+    const resolved = new URL(url, window.location.href);
+    if (demoScenario) resolved.searchParams.set("demo", demoScenario === "returning" ? "1" : "new");
+    Object.entries(paramsToAdd).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") resolved.searchParams.set(key, String(value));
+    });
+    return `${resolved.pathname.split("/").pop()}${resolved.search}`;
+  }
+
   function setDemoBadge(element) {
     if (!element) return;
     if (demoScenario) {
@@ -122,6 +131,13 @@
     }).format(date);
   }
 
+  function formatDate(value) {
+    if (!value) return "―";
+    const raw = String(value).slice(0, 10);
+    const parts = raw.split("-");
+    return parts.length === 3 ? `${parts[0]}年${Number(parts[1])}月${Number(parts[2])}日` : raw;
+  }
+
   function formatYen(value) {
     const number = Number(value);
     if (!Number.isFinite(number)) return "―";
@@ -141,6 +157,45 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
   }
 
+  function injectStep13Links() {
+    const file = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+    if (file === "index.html" || file === "") {
+      const grid = document.querySelector(".menu-grid");
+      if (grid && !document.getElementById("catalogStep13Button")) {
+        const catalogButton = document.createElement("button");
+        catalogButton.id = "catalogStep13Button";
+        catalogButton.className = "menu-button";
+        catalogButton.type = "button";
+        catalogButton.innerHTML = '<span class="coming-soon">写真付き</span><span class="menu-icon">🧴</span><span class="menu-title">商品カタログ</span><span class="menu-desc">写真・特徴・使い方・在庫を確認</span>';
+        catalogButton.addEventListener("click", () => { window.location.href = appendQuery(config.CATALOG_PAGE); });
+
+        const careButton = document.createElement("button");
+        careButton.id = "myCosmeticsStep13Button";
+        careButton.className = "menu-button";
+        careButton.type = "button";
+        careButton.innerHTML = '<span class="coming-soon">利用できます</span><span class="menu-icon">✨</span><span class="menu-title">マイコスメ</span><span class="menu-desc">使用中商品・再購入目安・おすすめ</span>';
+        careButton.addEventListener("click", () => { window.location.href = appendQuery(config.MY_COSMETICS_PAGE); });
+        grid.append(catalogButton, careButton);
+      }
+    }
+
+    if (file === "member.html" && !document.getElementById("step13MemberLinks")) {
+      const main = document.querySelector("main") || document.querySelector(".main");
+      if (main) {
+        const section = document.createElement("section");
+        section.id = "step13MemberLinks";
+        section.className = "card step13-member-links";
+        section.innerHTML = `
+          <div class="card-header"><div><p class="eyebrow">MY BEAUTY CARE</p><h2>マイコスメ・商品カタログ</h2><p class="member-meta">現在使用している商品、再購入目安、店舗からのおすすめを確認できます。</p></div><div class="status-icon" aria-hidden="true">✨</div></div>
+          <div class="form-actions">
+            <a class="btn primary" href="${escapeHtml(appendQuery(config.MY_COSMETICS_PAGE))}">マイコスメを開く</a>
+            <a class="btn secondary" href="${escapeHtml(appendQuery(config.CATALOG_PAGE))}">写真付き商品カタログ</a>
+          </div>`;
+        main.append(section);
+      }
+    }
+  }
+
   window.DPRO = Object.freeze({
     config,
     demoScenario,
@@ -148,11 +203,16 @@
     getIdentityPayload,
     loadLocalProfile,
     querySuffix,
+    appendQuery,
     setDemoBadge,
     escapeHtml,
     formatDateTime,
+    formatDate,
     formatYen,
     maskPhoneForSummary,
     showToast,
   });
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", injectStep13Links);
+  else injectStep13Links();
 })();

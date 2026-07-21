@@ -20,6 +20,13 @@ window.DPRO_COSMETICS_CONFIG = Object.freeze({
   CAMPAIGNS_PAGE: "campaigns.html",
   OWNER_ENGAGEMENT_PAGE: "owner-engagement.html",
   SYSTEM_CHECK_PAGE: "system-check.html",
+
+  // STEP COSMETICS-13
+  CATALOG_PAGE: "catalog.html",
+  PRODUCT_PAGE: "product.html",
+  MY_COSMETICS_PAGE: "my-cosmetics.html",
+  RECOMMENDATION_PAGE: "recommendation.html",
+
   POLICY_VERSION: "2026-07",
   REQUEST_TIMEOUT_MS: 15000,
 });
