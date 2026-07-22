@@ -196,6 +196,37 @@
     }
   }
 
+  function injectStep14Links() {
+    const file = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+    const suffix = querySuffix();
+
+    if (file === "owner.html") {
+      const actions = document.querySelector(".owner-topbar-actions");
+      if (actions && !document.getElementById("ownerCrmStep14Link")) {
+        const link = document.createElement("a");
+        link.id = "ownerCrmStep14Link";
+        link.className = "btn ghost compact";
+        link.href = `${config.OWNER_CRM_PAGE || "owner-crm.html"}${suffix}`;
+        link.textContent = "商品・再購入CRM";
+        const firstLink = actions.querySelector("a");
+        actions.insertBefore(link, firstLink || actions.firstChild);
+      }
+    }
+
+    if (file === "owner-ipad.html") {
+      const actions = document.querySelector(".ipad-topbar-controls");
+      if (actions && !document.getElementById("ipadCareStep14Link")) {
+        const link = document.createElement("a");
+        link.id = "ipadCareStep14Link";
+        link.className = "btn ghost compact";
+        link.href = `${config.OWNER_IPAD_CARE_PAGE || "owner-ipad-care.html"}${suffix}`;
+        link.textContent = "継続接客";
+        const refresh = document.getElementById("ipadRefreshButton");
+        actions.insertBefore(link, refresh || actions.lastChild);
+      }
+    }
+  }
+
   window.DPRO = Object.freeze({
     config,
     demoScenario,
@@ -213,6 +244,11 @@
     showToast,
   });
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", injectStep13Links);
-  else injectStep13Links();
+  function injectAllDproLinks() {
+    injectStep13Links();
+    injectStep14Links();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", injectAllDproLinks);
+  else injectAllDproLinks();
 })();

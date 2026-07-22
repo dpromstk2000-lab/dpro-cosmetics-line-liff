@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "COSMETICS-13-R1-UI-SYSTEM-CHECK-15-20260721";
+  const VERSION = "COSMETICS-14-OWNER-CRM-IPAD-CARE-20260721";
   const BASE_PAGES = [
     ["LINEトップ", "index.html"],
     ["会員マイページ", "member.html"],
@@ -21,6 +21,8 @@
     ["商品詳細", "product.html"],
     ["マイコスメ", "my-cosmetics.html"],
     ["個別おすすめ", "recommendation.html"],
+    ["商品・再購入CRM", "owner-crm.html"],
+    ["iPad継続接客", "owner-ipad-care.html"],
   ];
 
   const ALL_PAGES = [...BASE_PAGES, ...EXTRA_PAGES];
@@ -119,7 +121,7 @@
       const count = document.getElementById("systemCheckPageCount");
       if (count) {
         count.textContent = `${passed}/${total}`;
-        count.title = `STEP COSMETICS-13-R1｜${VERSION}`;
+        count.title = `STEP COSMETICS-14｜${VERSION}`;
       }
 
       const overall = document.getElementById("systemCheckOverall");
@@ -130,7 +132,7 @@
         document.getElementById("systemCheckOverallTitle").textContent =
           "追加画面に確認が必要です";
         document.getElementById("systemCheckOverallMessage").textContent =
-          "商品カタログ・商品詳細・マイコスメ・個別おすすめ画面を確認してください。";
+          "商品カタログ・マイコスメ・商品再購入CRM・iPad継続接客画面を確認してください。";
       }
 
       container.dataset.step13R1 = "done";
@@ -174,11 +176,11 @@
       event.stopImmediatePropagation();
       copyButton.disabled = true;
       const original = copyButton.textContent;
-      copyButton.textContent = "15画面を集計中…";
+      copyButton.textContent = "17画面を集計中…";
       try {
         const report = await buildFullReport();
         await copyText(JSON.stringify(report, null, 2));
-        window.DPRO?.showToast("15画面を含む検査JSONをコピーしました。");
+        window.DPRO?.showToast("17画面を含む検査JSONをコピーしました。");
       } catch (error) {
         window.DPRO?.showToast(error.message || "検査JSONを作成できませんでした。");
       } finally {
@@ -193,7 +195,7 @@
       event.stopImmediatePropagation();
       downloadButton.disabled = true;
       const original = downloadButton.textContent;
-      downloadButton.textContent = "15画面を集計中…";
+      downloadButton.textContent = "17画面を集計中…";
       try {
         const report = await buildFullReport();
         const blob = new Blob([JSON.stringify(report, null, 2)], {
@@ -202,12 +204,12 @@
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `dpro-cosmetics-system-check-15-${new Date().toISOString().slice(0, 10)}.json`;
+        link.download = `dpro-cosmetics-system-check-17-${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(link);
         link.click();
         link.remove();
         URL.revokeObjectURL(url);
-        window.DPRO?.showToast("15画面を含む検査結果を保存しました。");
+        window.DPRO?.showToast("17画面を含む検査結果を保存しました。");
       } catch (error) {
         window.DPRO?.showToast(error.message || "検査結果を保存できませんでした。");
       } finally {
@@ -237,10 +239,12 @@
       version: VERSION,
       api,
       pages,
-      step13_r1: {
-        ok: latestExtraResults.every((item) => item.ok),
+      step14: {
+        ok: latestExtraResults.every((item) => item.ok)
+          && (window.DPRO_COSMETICS_STEP14_API_REPORT?.ok !== false),
         version: VERSION,
         extra_results: latestExtraResults,
+        api_report: window.DPRO_COSMETICS_STEP14_API_REPORT || null,
       },
       browser: {
         user_agent: navigator.userAgent,
