@@ -1,0 +1,284 @@
+<!doctype html>
+<!-- DPRO LIVE DEMO COMMON TEMPLATE V1.0 LOCK / CONFIGURABLE TEMPLATE -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title id="pageTitle">DPRO 公開操作デモ・画面一覧</title>
+<style>
+:root{
+  --bg:#f8f2f5;--card:#fff;--ink:#30252b;--muted:#776971;--line:#e4d7de;
+  --brand:#8b536e;--deep:#3f2734;--brand2:#b77e99;--soft:#f7edf2;
+  --shadow:0 16px 46px rgba(44,37,32,.10)
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;line-height:1.65;background:linear-gradient(180deg,#fff 0%,var(--bg) 100%)}
+a{color:inherit}.page{width:min(1140px,calc(100% - 24px));margin:0 auto;padding:20px 0 48px}
+.hero{position:relative;overflow:hidden;padding:34px;border-radius:28px;color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand) 63%,var(--brand2));box-shadow:0 23px 58px rgba(35,30,27,.20)}
+.hero:after{content:"";position:absolute;right:-95px;bottom:-150px;width:290px;height:290px;border-radius:50%;background:rgba(255,255,255,.07)}
+.kicker{position:relative;z-index:1;font-size:11px;font-weight:1000;letter-spacing:.14em;opacity:.9}
+.hero h1{position:relative;z-index:1;margin:10px 0 0;font-size:clamp(28px,5vw,49px);line-height:1.24}
+.hero p{position:relative;z-index:1;max-width:830px;margin:13px 0 0;font-size:14px;opacity:.93}
+.hero-actions{position:relative;z-index:1;display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.button{min-height:45px;display:inline-flex;align-items:center;justify-content:center;padding:9px 15px;border-radius:999px;text-decoration:none;font-size:12px;font-weight:950}
+.button-light{color:var(--deep);background:#fff}.button-ghost{color:#fff;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.09)}
+.notice{margin-top:15px;padding:15px 17px;border:1px solid #e5cda3;border-radius:15px;background:#fff5e5;color:#725013;font-size:12px;font-weight:760}
+.demo-info{margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.demo-info>div{padding:14px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.demo-info small{display:block;color:var(--brand);font-size:9px;font-weight:1000;letter-spacing:.08em}.demo-info strong{display:block;margin-top:4px;font-size:14px}
+.section-head{margin:32px 0 15px}.section-head small{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.12em}.section-head h2{margin:5px 0 0;font-size:clamp(23px,4vw,34px)}.section-head p{max-width:840px;margin:7px 0 0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{min-width:0;padding:20px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.98);box-shadow:var(--shadow)}
+.card-number{color:var(--brand);font-size:10px;font-weight:1000;letter-spacing:.1em}.card h3{margin:7px 0 0;font-size:21px;line-height:1.4}.card p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.pills span{padding:5px 8px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:9px;font-weight:900}
+.card-note{margin-top:13px;padding:11px;border-radius:12px;background:var(--soft);color:#675a54;font-size:11px}.card-note b{color:var(--deep)}
+.card-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}
+.open,.official{min-height:44px;display:flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:12px;text-decoration:none;font-size:10px;font-weight:950}
+.open{color:#fff;background:linear-gradient(135deg,var(--deep),var(--brand2))}.official{color:var(--deep);border:1px solid var(--line);background:var(--soft)}
+.flow{margin-top:14px;padding:19px;border:1px solid var(--line);border-radius:19px;background:#fff;box-shadow:var(--shadow)}
+.flow-grid{display:grid;grid-template-columns:repeat(var(--flow-cols,5),minmax(0,1fr));gap:8px}
+.flow-step{padding:12px;border-radius:12px;background:var(--soft)}.flow-step b{display:block;color:var(--brand);font-size:10px}.flow-step strong{display:block;margin-top:4px;font-size:11px}.flow-step.same{border:1px dashed #cdbfb6}
+.footer{margin-top:26px;color:#82736c;font-size:10px;text-align:center}
+@media(max-width:900px){.flow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.hero{padding:25px 20px}.demo-info,.grid,.flow-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.page{width:min(100% - 16px,1140px)}.card-actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="hero">
+  <div class="kicker">PUBLIC OPERATION DEMO / V1.0</div>
+  <h1 id="heroTitle"></h1>
+  <p id="heroCopy"></p>
+  <div class="hero-actions">
+    <a class="button button-light" id="officialLink">公式の機能・料金説明を見る</a>
+    <a class="button button-ghost" id="primaryDemoLink">まず体験する</a>
+  </div>
+</section>
+
+<div class="notice" id="notice"></div>
+
+<section class="demo-info" id="quickInfo" aria-label="デモ利用情報"></section>
+
+<div class="section-head">
+  <small>CHOOSE A SCREEN</small>
+  <h2>確認する画面を選択</h2>
+  <p id="screenIntro"></p>
+</div>
+
+<section class="grid" id="screenGrid"></section>
+
+<div class="section-head">
+  <small>RECOMMENDED JOURNEY</small>
+  <h2>おすすめの確認順</h2>
+  <p id="journeyIntro"></p>
+</div>
+<section class="flow"><div class="flow-grid" id="flowGrid"></div></section>
+
+<div class="footer" id="footer"></div>
+</main>
+
+<script>
+/*
+  DPRO LIVE DEMO COMMON TEMPLATE V1.0
+  ------------------------------------------------------------
+  変更してよいのは CONFIG の値とCSS変数のブランド色のみ。
+  DOM骨格・セクション順・公開注意・CHOOSE A SCREEN・
+  RECOMMENDED JOURNEYはCOMMON TEMPLATE V1.0 LOCK対象。
+*/
+const CONFIG = {
+  "systemName": "DPRO 化粧品・コスメ販売 LINE",
+  "pageTitle": "DPRO 化粧品・コスメ販売 LINE｜公開操作デモ・画面一覧",
+  "heroCopy": "購入履歴から「いつもの商品」の再購入へ。美容相談、商品取り置き、店舗対応、顧客カルテ、販促までを同じ顧客体験として確認できます。",
+  "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html",
+  "primaryDemoUrl": "index.html?demo=1",
+  "notice": "公開デモでは実在する氏名・電話番号・メールアドレス、肌悩み・健康情報、購入明細などを入力しないでください。会員・美容相談・商品利用情報は必ず架空データを使用してください。",
+  "screenIntro": "01のLINE会員ページから開始し、使用中商品と再購入、美容相談、取り置き、店舗対応、顧客カルテ、販促・キャンペーンまで順に確認します。",
+  "journeyIntro": "購入後のフォローを担当者任せにせず、次の相談・再購入へつなげる順番で確認します。",
+  "adminCode": "1234",
+  "quickInfo": [
+    {
+      "label": "CUSTOMER FLOW",
+      "text": "LINE会員 → 使用中商品・再購入 → 美容相談・取り置き"
+    },
+    {
+      "label": "ADMIN CODE",
+      "text": "店舗側デモ管理コード：1234"
+    },
+    {
+      "label": "SCREEN STRUCTURE",
+      "text": "7画面で7ステップを確認"
+    }
+  ],
+  "screens": [
+    {
+      "step": "01 / LINE MEMBER",
+      "title": "お客様用\nLINE会員ページ",
+      "description": "美容相談、商品取り置き、「いつもの商品」、マイページ、問い合わせ、キャンペーンへの入口を確認します。",
+      "tags": [
+        "LINE会員",
+        "購入履歴",
+        "再購入導線"
+      ],
+      "note": "最初にここから。既存顧客デモを使用し、実在情報は入力しないでください。",
+      "url": "index.html?demo=1",
+      "cta": "LINE会員ページを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "02 / MY COSMETICS",
+      "title": "お客様用\n使用中商品・再購入目安",
+      "description": "使用中商品、使い切り目安、再購入、おすすめ、定期購入希望を確認します。",
+      "tags": [
+        "使用中商品",
+        "再購入目安",
+        "おすすめ"
+      ],
+      "note": "購入後の情報を次の購入につなげる中心画面です。",
+      "url": "my-cosmetics.html?demo=1",
+      "cta": "マイコスメを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "03 / BEAUTY CONSULTATION",
+      "title": "お客様用\n美容相談予約",
+      "description": "商品選びや使い方などを店舗スタッフへ相談する予約を作成します。",
+      "tags": [
+        "美容相談",
+        "予約",
+        "スタッフ"
+      ],
+      "note": "肌・健康に関する実在情報は入力せず、架空の相談内容を使用してください。",
+      "url": "consultation.html?demo=1",
+      "cta": "美容相談を開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "04 / PICKUP",
+      "title": "お客様用\n商品取り置き",
+      "description": "商品・色・容量などを選び、店舗での受け取りを依頼します。",
+      "tags": [
+        "取り置き",
+        "商品選択",
+        "店頭受取"
+      ],
+      "note": "架空の商品・顧客情報で受付の流れを確認します。",
+      "url": "pickup.html?demo=1",
+      "cta": "取り置きを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "05 / STORE IPAD CARE",
+      "title": "店舗iPad\n接客・商品ケア",
+      "description": "店舗側で来店対応、使用中商品やおすすめなど顧客ケアの業務を確認します。",
+      "tags": [
+        "店頭対応",
+        "顧客ケア",
+        "iPad"
+      ],
+      "note": "デモ管理コード：1234。実在する顧客情報は使用しないでください。",
+      "url": "owner-ipad-care.html?demo=1",
+      "cta": "店舗iPadを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "06 / CUSTOMER CRM",
+      "title": "オーナーCRM\n顧客カルテ・購入履歴",
+      "description": "顧客ごとの購入・相談・商品利用情報をまとめて確認します。",
+      "tags": [
+        "顧客カルテ",
+        "購入履歴",
+        "相談履歴"
+      ],
+      "note": "デモ管理コード：1234。顧客情報を一つに集約する価値を確認します。",
+      "url": "owner-crm.html?demo=1",
+      "cta": "顧客CRMを開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    },
+    {
+      "step": "07 / ENGAGEMENT",
+      "title": "オーナー管理\n再購入フォロー・販促",
+      "description": "問い合わせ、再購入フォロー、キャンペーンなど購入後の継続接点を確認します。",
+      "tags": [
+        "再購入フォロー",
+        "販促",
+        "キャンペーン"
+      ],
+      "note": "売って終わりにせず、次の相談・購入へつなぐ運用を確認します。",
+      "url": "owner-engagement.html?demo=1",
+      "cta": "販促管理を開く",
+      "officialUrl": "https://dpromstk2000-lab.github.io/dpro-line-systems-site/lp-cosmetics.html"
+    }
+  ],
+  "journey": [
+    {
+      "step": "01",
+      "text": "LINE会員・購入履歴"
+    },
+    {
+      "step": "02",
+      "text": "使用中商品・再購入"
+    },
+    {
+      "step": "03",
+      "text": "美容相談"
+    },
+    {
+      "step": "04",
+      "text": "商品取り置き"
+    },
+    {
+      "step": "05",
+      "text": "店舗で顧客ケア"
+    },
+    {
+      "step": "06",
+      "text": "顧客カルテ"
+    },
+    {
+      "step": "07",
+      "text": "再購入フォロー・販促"
+    }
+  ]
+};
+
+document.documentElement.style.setProperty("--flow-cols", String(Math.min(CONFIG.journey.length, 7)));
+document.title = CONFIG.pageTitle;
+document.getElementById("heroTitle").innerHTML = `${CONFIG.systemName}<br>公開操作デモ・画面一覧`;
+document.getElementById("heroCopy").textContent = CONFIG.heroCopy;
+document.getElementById("officialLink").href = CONFIG.officialUrl;
+document.getElementById("primaryDemoLink").href = CONFIG.primaryDemoUrl;
+document.getElementById("notice").textContent = CONFIG.notice;
+document.getElementById("screenIntro").textContent = CONFIG.screenIntro;
+document.getElementById("journeyIntro").textContent = CONFIG.journeyIntro;
+document.getElementById("footer").textContent = `${CONFIG.systemName}｜PUBLIC OPERATION DEMO V1.0`;
+
+document.getElementById("quickInfo").innerHTML = CONFIG.quickInfo.map(x =>
+  `<div><small>${x.label}</small><strong>${x.text}</strong></div>`
+).join("");
+
+document.getElementById("screenGrid").innerHTML = CONFIG.screens.map(x => `
+  <article class="card">
+    <div class="card-number">${x.step}</div>
+    <h3>${x.title}</h3>
+    <p>${x.description}</p>
+    <div class="pills">${x.tags.map(t => `<span>${t}</span>`).join("")}</div>
+    <div class="card-note">${x.note}</div>
+    <div class="card-actions">
+      <a class="open" href="${x.url}">${x.cta}</a>
+      <a class="official" href="${x.officialUrl}">説明</a>
+    </div>
+  </article>
+`).join("");
+
+document.getElementById("flowGrid").innerHTML = CONFIG.journey.map(x => `
+  <div class="flow-step${x.sameScreen ? " same" : ""}">
+    <b>${x.step}${x.sameScreen ? " / SAME SCREEN" : ""}</b>
+    <strong>${x.text}</strong>
+  </div>
+`).join("");
+</script>
+</body>
+</html>
