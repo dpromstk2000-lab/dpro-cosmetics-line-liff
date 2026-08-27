@@ -1,0 +1,246 @@
+:root {
+  --dpro-tut-deep: #3f2734;
+  --dpro-tut-brand: #8b536e;
+  --dpro-tut-soft: #f7edf2;
+  --dpro-tut-ink: #2f262b;
+  --dpro-tut-muted: #6f646a;
+  --dpro-tut-line: #dfd2d8;
+  --dpro-tut-warning: #7a4f10;
+  --dpro-tut-warning-bg: #fff4dd;
+}
+
+#dpro-tutorial-launcher,
+#dpro-tutorial-card,
+#dpro-tutorial-highlight,
+#dpro-tutorial-resume-banner {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+}
+
+#dpro-tutorial-launcher {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 2147483000;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dpro-tut-launch-button,
+.dpro-tut-guide-link {
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  padding: 9px 14px;
+  box-shadow: 0 10px 28px rgba(31,20,27,.22);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.dpro-tut-launch-button {
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, var(--dpro-tut-deep), var(--dpro-tut-brand));
+}
+
+.dpro-tut-guide-link {
+  color: var(--dpro-tut-deep);
+  background: rgba(255,255,255,.97);
+  border-color: var(--dpro-tut-line);
+}
+
+#dpro-tutorial-card {
+  position: fixed;
+  z-index: 2147483002;
+  width: min(360px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--dpro-tut-line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.985);
+  color: var(--dpro-tut-ink);
+  box-shadow: 0 24px 64px rgba(35,23,30,.30);
+}
+
+#dpro-tutorial-card[hidden],
+#dpro-tutorial-highlight[hidden],
+#dpro-tutorial-resume-banner[hidden] { display: none !important; }
+
+.dpro-tut-handle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 9px 12px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--dpro-tut-deep), var(--dpro-tut-brand));
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dpro-tut-handle:active { cursor: grabbing; }
+.dpro-tut-handle-label { font-size: 12px; font-weight: 900; letter-spacing: .06em; }
+.dpro-tut-handle-hint { font-size: 11px; opacity: .82; }
+
+.dpro-tut-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 15px 16px 10px;
+}
+
+.dpro-tut-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 9px;
+  color: var(--dpro-tut-brand);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+.dpro-tut-title {
+  margin: 0 0 8px;
+  color: var(--dpro-tut-deep);
+  font-size: 21px;
+  line-height: 1.35;
+  outline: none;
+}
+
+.dpro-tut-copy {
+  margin: 0;
+  color: var(--dpro-tut-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.dpro-tut-action-note,
+.dpro-tut-safety {
+  margin-top: 11px;
+  padding: 10px 11px;
+  border-radius: 11px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.dpro-tut-action-note {
+  color: var(--dpro-tut-deep);
+  background: var(--dpro-tut-soft);
+}
+
+.dpro-tut-safety {
+  color: var(--dpro-tut-warning);
+  background: var(--dpro-tut-warning-bg);
+  border: 1px solid #ecd8ac;
+}
+
+.dpro-tut-status {
+  min-height: 18px;
+  margin-top: 9px;
+  color: var(--dpro-tut-brand);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.dpro-tut-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 7px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--dpro-tut-line);
+  background: #fff;
+}
+
+.dpro-tut-actions button,
+.dpro-tut-actions a {
+  min-width: 0;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 9px;
+  border-radius: 10px;
+  border: 1px solid var(--dpro-tut-line);
+  background: #fff;
+  color: var(--dpro-tut-deep);
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.dpro-tut-actions .primary {
+  color: #fff;
+  border-color: var(--dpro-tut-brand);
+  background: var(--dpro-tut-brand);
+}
+
+.dpro-tut-actions .danger-soft { color: #8c3434; }
+.dpro-tut-actions button:disabled { opacity: .45; cursor: not-allowed; }
+
+#dpro-tutorial-card button:focus-visible,
+#dpro-tutorial-card a:focus-visible,
+#dpro-tutorial-launcher button:focus-visible,
+#dpro-tutorial-launcher a:focus-visible,
+#dpro-tutorial-resume-banner button:focus-visible {
+  outline: 3px solid #d7a84e;
+  outline-offset: 2px;
+}
+
+#dpro-tutorial-highlight {
+  position: fixed;
+  z-index: 2147483001;
+  pointer-events: none;
+  border: 3px solid #c4862e;
+  border-radius: 12px;
+  box-shadow: 0 0 0 5px rgba(255,255,255,.84), 0 0 0 9px rgba(196,134,46,.22);
+  transition: left .16s ease, top .16s ease, width .16s ease, height .16s ease;
+}
+
+#dpro-tutorial-resume-banner {
+  position: fixed;
+  left: 50%;
+  bottom: max(70px, calc(58px + env(safe-area-inset-bottom)));
+  transform: translateX(-50%);
+  z-index: 2147482999;
+  width: min(520px, calc(100vw - 24px));
+  padding: 12px;
+  border: 1px solid var(--dpro-tut-line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.98);
+  box-shadow: 0 14px 38px rgba(35,23,30,.20);
+  color: var(--dpro-tut-deep);
+  font-size: 13px;
+}
+
+.dpro-tut-resume-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.dpro-tut-resume-row span { min-width: 0; }
+.dpro-tut-resume-row button { flex: 0 0 auto; min-height: 38px; padding: 7px 12px; border: 0; border-radius: 9px; color: #fff; background: var(--dpro-tut-brand); font-weight: 800; cursor: pointer; }
+
+html.dpro-tutorial-dragging,
+html.dpro-tutorial-dragging * { user-select: none !important; -webkit-user-select: none !important; }
+
+@media (max-width: 420px) {
+  #dpro-tutorial-launcher { right: 8px; bottom: 8px; gap: 6px; }
+  .dpro-tut-guide-link { display: none; }
+  #dpro-tutorial-card { width: calc(100vw - 16px); }
+  .dpro-tut-actions { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .dpro-tut-body { max-height: calc(100dvh - 190px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dpro-tutorial-highlight { transition: none; }
+  #dpro-tutorial-card *, #dpro-tutorial-highlight { scroll-behavior: auto !important; animation: none !important; }
+}

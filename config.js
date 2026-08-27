@@ -26,3 +26,18 @@ window.DPRO_COSMETICS_CONFIG = Object.freeze({
   POLICY_VERSION: "2026-08-R3",
   REQUEST_TIMEOUT_MS: 15000,
 });
+
+(() => {
+  if (document.querySelector('script[data-dpro-tutorial-loader]')) return;
+  const style = document.createElement('link');
+  style.rel = 'stylesheet';
+  style.href = 'tutorial.css';
+  style.dataset.dproTutorialLoader = '1';
+  document.head.appendChild(style);
+
+  const script = document.createElement('script');
+  script.src = 'tutorial.js';
+  script.async = false;
+  script.dataset.dproTutorialLoader = '1';
+  document.head.appendChild(script);
+})();
